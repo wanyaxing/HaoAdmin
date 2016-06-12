@@ -1,0 +1,28 @@
+/* 必须指定.webuploader-pick的大小，不然自动生成的文件上传区的大小就会错乱*/
+
+.dnd_which_upload_to_qiniu li{
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    font-size: 50%;
+    text-align: center;
+    display: inline-block;
+    position:relative;
+    margin:10px;
+    border: 1px solid gray;
+}
+
+.dnd_which_upload_to_qiniu li *{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.pick_which_upload_to_qiniu .webuploader-element-invisible
+{
+    opacity: 0
+}

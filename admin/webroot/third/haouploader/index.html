@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    <script type="text/javascript" src="http://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+    <script type="text/javascript" src="js/webuploader-haoplus.js"></script>
+    <script type="text/javascript" src="js/sortable/Sortable.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/haouploader.css">
+    <script type="text/javascript" src="js/haouploader.js"></script>
+</head>
+<body>
+    <p>
+        此脚本会自动处理class为 input_which_upload_to_qiniu 的INPUT，从而支持图片上传或修改。<br/><br/>
+        如果需要自定义图片缩略图的大小，请自定义相关css。<br/><br/>
+        通过HaoUploader.init($('.input_which_upload_to_qiniu')[0])可以初始化对应的input元素，获得uploader对象。<br/><br/>
+        再次使用HaoUploader.init($('.input_which_upload_to_qiniu')[0])，可以重新获得对应的uploader对象。<br/><br/>
+        如果在其他地方修改input值后，可使用uploader.updateDNDOfInputValue()方法，来刷新预览区的缩略图。（如AJAX交互更新了input中的值之后，需要刷新预览区）。<br/><br/>
+        使用方案一：PHP预置值到input的value后输出HTML代码即可。<br/><br/>
+        使用方案二：在前端页面，使用ajax读取数据后，将取得的url赋值进对应的input，然后调用uploader.updateDNDOfInputValue方法，刷新预览区。<br/><br/>
+        举例：<br/><br/>
+    </p>
+    <div style="width: 50%;  height: 50%;   margin: auto;   ">
+        <form action="/hao_ajax.php" method="post" target="_blank">
+            <table>
+                <tr><td>action:     </td><td><input type="text" name="url_param" value="feedback/add"/></td></tr>
+                <tr><td>contact:    </td><td><input type="text" name="contact"   value="13774298448"/></td></tr>
+                <tr><td>title:      </td><td><input type="text" name="title"   value="测试下"/></td></tr>
+                <tr><td>description:</td><td><input type="text" name="description"   value="说点啥"/></td></tr>
+                <tr><td>avatar:      </td><td><input class="input_which_upload_to_qiniu" type="hidden" name="avatar" value="http://tmp.haoxitech.com/e22fc9fc6bc9933837bd1dedc1b9c80c_124770.png" /></td></tr>
+                <tr><td>photo:      </td><td><input class="input_which_upload_to_qiniu" type="hidden" name="photo" value="http://tmp.wanyaxing.com/91e8e12f0a26de81c106fde7fc9d7626_102721.PNG" multiple/></td></tr>
+                <tr><td></td><td><input type="submit"/></td></tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,413 @@
+if (typeof jQuery === 'undefined') {
+    throw new Error('jQuery no found. ');
+}
+
+/** 支持取得元素的id，如果没有id，就创造一个id。 */
+(function($, undefined) {
+	$.fn.extend({
+	attrId: function() {//axing add
+		var id = $(this).attr('id');
+		if (!id)
+		{
+			id = 'rand_'+Math.random().toString(36).substr(2)
+			$(this).attr('id',id);
+		}
+		return id;
+	}
+	});
+})(jQuery);
+
+
+/** 重新注册对应的组件行为（比如一些特殊的下拉框、地图组件，上传图片的组件之类的。 */
+function haoPageInit(target)
+{
+	// console.log('debug');
+	if (!target){target='body';}
+	var $target = $(target);
+
+	// setTimeout(function(){
+		// $('title').html($('#main_content .breadcrumb li.active a').html());
+	// },1000);
+	// document.getElementsByTagName('title')[0].innerHTML = $('#main_content .breadcrumb li.active a').html();
+
+	//使用HaoAdmin.detail()方法来处理/edit/标签
+	$target.find('a[href^="/edit/"]').click(function(e){
+		HaoAdmin.detail(this);
+		return false;
+	});
+
+	//空数据提示
+	if($('#main_content tbody').children().length == 0)
+	{
+		$('#main_content tbody').html('<tr><td colspan='+($('#main_content thead th').length)+' align=center>未查询到任何结果哦。</td></tr>');
+	}
+
+	//required表单标识增强
+	$target.find('form').attr({'novalidate':'novalidate'});
+	// $target.find('input[required]').closest('div').attr({'required':'required'});
+	$target.find('div[required]').find('select,input,textarea').attr({'required':'required'});
+	if ($target.find('form').hasClass('form-horizontal'))
+	{
+		$target.find('[required]').each(function(){
+			if ($(this).siblings('.form-control-required').length==0)
+			{
+				$(this).closest('select,input,textarea').after('<span class="form-control-required">*</span>');
+			}
+		});
+	}
+	else
+	{
+		$target.find('[required]').each(function(){
+			if ($(this).closest('.form-group').find('.form-control-required').length==0)
+			{
+				$(this).closest('.form-group').append('<span class="form-control-required">*</span>');
+			}
+		});
+	}
+	// 支持ajax的选择组件
+	$target
+		.find('select[search-type]')
+		.bind({
+				'chosen:ready':chosen_ready
+				,'chosen:winnow_results':chosen_winnow_results
+				})
+		.chosen({
+					 allow_single_deselect: true
+					,search_contains:true
+				});
+	// 七牛上传
+    $target.find('input.input_which_upload_to_qiniu').each(function(){
+        HaoUploader.init(this);
+    });
+    // 时间组件
+    $target
+		.find('input.datetimepicker').datetimepicker({
+		 // timepicker:false,
+		 format:'Y-m-d H:i:s',
+		 step:10,
+		 dayOfWeekStart:1,
+		 mask:true, // '9999/19/39 29:59' - digit is the maximum possible for a cell
+		}).blur();
+	// 地址转地图组件
+    $target.find('input.input_which_is_address').each(function(){
+        HaoAmap.init(this);
+    });
+	// checkbox转开关
+    $target.find('input[type=checkbox].bootstrap-switch').bootstrapSwitch();
+
+    // 富文本编辑器
+    $target.find('script[type="text/plain"]').each(function(){
+	    var ue = UE.getEditor($(this).attrId(),{
+						    	elementPathEnabled:false//是否启用元素路径，默认是显示
+						    	,toolbars: [[
+						            'emotion','bold', 'italic', 'underline','strikethrough','forecolor', 'backcolor','|', 'insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|','|','insertimage','|','undo', 'redo','|','source'
+						        	]]
+						    });
+    });
+
+    var ajaxCaptcha = null;
+    // 图片验证码
+    $target.find('input[name=captcha_key]').each(function(){
+    	var img = $(this).siblings('img');
+    	if (img.length==0)
+    	{
+    		img = $('<img/>').insertAfter(this);
+	    	img.click(function(){
+	    		var that = this;
+	    		if (ajaxCaptcha){HaoConnect.abort(ajaxCaptcha);}
+	    		ajaxCaptcha = HaoConnect.ajax('axapi/get_captcha').done(function(hResult){
+		    			$(that).attr('src',hResult.find('url'));
+		    			$(that).siblings('[name=captcha_key]').val(hResult.find('captchaKey'));
+			    		var random = Math.random();
+			    		$(that).attr('time-random',random);
+			    		setTimeout(function(){
+			    			if ($(that).attr('time-random')==random)
+			    			{
+				    			$(that).trigger('click');
+			    			}
+			    		},60000);
+		    		});
+	    	}).trigger('click');
+    	}
+    });
+
+}
+
+/*注销相关事件*/
+function haoPageOutIt(target)
+{
+	var $target = $(target);
+// 支持ajax的选择组件
+	$target.find('select[search-type]').chosen("destroy");
+// 七牛上传
+    $target.find('.input_which_upload_to_qiniu').each(function(){
+        HaoUploader.destroy(this);
+    });
+// 时间组件
+    $target.find('input.datetimepicker').datetimepicker('destroy');
+// 地址转地图组件
+    $target.find('.input_which_is_address').each(function(){
+        HaoAmap.destroy(this);
+    });
+// checkbox转开关
+// 富文本编辑器
+    $target.find('script[type="text/plain"]').each(function(){
+	    UE.getEditor($(this).attrId()).destroy();
+    });
+// 图片验证码
+    $target.find('[name=captcha_key]').siblings('img').unbind().remove();
+}
+
+/*chosen组件ready事件自定义操作*/
+function chosen_ready(e,cObj)
+{
+	var chosen = cObj.chosen;
+	// console.log(chosen);
+	var chosenType = chosen.form_field_jq.attr('search-type');
+	chosen.form_field_jq.attr('data-target',$(chosen.container).attrId());
+	// chosen.form_field_jq.
+	if (chosenType == 'ajax')
+	{
+		var ajaxUrl = chosen.form_field_jq.attr('search-ajax-url');
+		if (ajaxUrl.match(/(\{)(.*?)(\})/g))
+		{
+			ajaxUrl = ajaxUrl.replace(/(\{)(.*?)(\})/g,function($0,$1,selector,$3){
+				return chosen.form_field_jq.closest('form').find(selector).val();
+			});
+		}
+		var searchNamePath  = chosen.form_field_jq.attr('search-name-path');
+		var searchValuePath = chosen.form_field_jq.attr('search-value-path');
+		var searchValueKey = searchValuePath.replace(/^.*\>/g,'');
+		chosen.form_field_jq.find('option').each(function(){
+			var optionObj = $(this);
+			if (optionObj.text() == optionObj.val() )
+			{
+				var xhr = optionObj.data('search-xhr');
+				if (xhr) { xhr.abort();}
+				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+searchNamePath+'&search_paths[]='+searchValuePath+'&'+searchValueKey+'='+optionObj.val(),function(result){
+					var hResult         = new HaoResult(result);
+					var names           = hResult.search(searchNamePath);
+					var values          = hResult.search(searchValuePath);
+					if (names.length == values.length)
+					{
+						var isNewFound = false;
+						for (var i in names)
+						{
+							if (optionObj.val() == values[i])
+							{
+								optionObj.html(names[i])
+								chosen.form_field_jq.trigger('chosen:updated');
+								break;
+							}
+						}
+					}
+				});
+				optionObj.data('search-xhr',xhr)
+			}
+		});
+	}
+}
+
+/*chosen组件显示结果事件自定义操作*/
+function chosen_winnow_results(e,cObj)
+{
+	var chosen = cObj.chosen;
+	var chosenType = chosen.form_field_jq.attr('search-type');
+	if (chosenType == 'tags' || chosenType == 'ajax')
+	{
+		var searchText = chosen.search_field.val();
+		var searchWord = encodeURI(searchText);
+		if (chosenType == 'ajax')
+		{
+			var ajaxUrl = chosen.form_field_jq.attr('search-ajax-url');
+			if (ajaxUrl.match(/(\{)(.*?)(\})/g))
+			{
+
+				ajaxUrl = ajaxUrl.replace(/(\{)(.*?)(\})/g,function($0,$1,selector,$3){
+					return chosen.form_field_jq.closest('form').find(selector).val();
+				});
+			}
+			if (ajaxUrl.substr(-1,1)=='=')
+			{
+				ajaxUrl = ajaxUrl+encodeURI(searchText);
+			}
+			searchWord = encodeURI(ajaxUrl);
+			if (searchText=='')
+			{
+				if (chosen.form_field_jq.find("option:selected").text() == chosen.form_field_jq.find("option:selected").val() )
+				{
+					var searchValuePath = chosen.form_field_jq.attr('search-value-path');
+					var searchValueKey = searchValuePath.replace(/^.*\>/g,'');
+				}
+			}
+		}
+		if (chosen.form_field_jq.attr('search-word') != searchWord)
+		{
+			chosen.form_field_jq.attr('search-word',searchWord);
+			chosen.form_field_jq.find('[from-search="true"]').not(':selected').remove();
+			if (searchText && chosenType == 'tags')
+			{
+				var value = searchText;
+				var name  = searchText;
+				if (chosen.form_field_jq.find('[value='+value+']').length == 0)
+				{
+					chosen.form_field_jq.append('<option from-search="true" value="'+value+'">'+name+'</option>');
+					console.log(value,name);
+					chosen.form_field_jq.trigger('chosen:updated');
+				}
+			}
+			else if (chosenType == 'ajax')
+			{
+				var xhr = chosen.form_field_jq.data('search-xhr');
+				if (xhr) { xhr.abort();}
+				chosen.search_results.find('.no-results').html('searching...');
+				var searchNamePath  = chosen.form_field_jq.attr('search-name-path');
+				var searchValuePath = chosen.form_field_jq.attr('search-value-path');
+
+				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+searchNamePath+'&search_paths[]='+searchValuePath,function(result){
+					var hResult         = new HaoResult(result);
+					var names           = hResult.search(searchNamePath);
+					var values          = hResult.search(searchValuePath);
+					if (names.length == values.length)
+					{
+						var isNewFound = false;
+						for (var i in names)
+						{
+							var value = values[i];
+							var name = names[i];
+							var optionObj = chosen.form_field_jq.find('[value='+value+']');
+							if (optionObj.length == 0)
+							{
+								if (name.indexOf(searchText)<0)
+								{
+									name = name + ' ('+searchText+')';
+								}
+								isNewFound = true;
+								chosen.form_field_jq.append('<option from-search="true" value="'+value+'">'+name+'</option>');
+							}
+							else if (optionObj.html() == optionObj.val())
+							{
+								isNewFound = true;
+								optionObj.html(name);
+							}
+						}
+						if (isNewFound)
+						{
+							chosen.form_field_jq.trigger('chosen:updated');
+						}
+						else
+						{
+							chosen.search_results.find('.no-results').html('nothing found...');
+						}
+					}
+				});
+				chosen.form_field_jq.data('search-xhr',xhr)
+			}
+		}
+	}
+}
+
+
+function selectAllInputThisRow(_this)
+{
+	var isChecked = $(_this).prop('checked');
+	var _index = $(_this).closest('th,td').index();
+	$(_this).closest('table').find('tr').find('td:eq('+_index+')').find('input[type=checkbox]').prop('checked',isChecked);
+}
+
+
+/** ----------------------------------------页面载入完成后，进行初始化与响应处理------------------------------------------------------------------ */
+
+/** 自动载入一张背景图 */
+$(function(){
+	var imgs = [];
+	for (var i = -1; i < 20 ; i++) {
+		imgs.push('/background.jpg?idx='+i);
+	}
+	$("body").ezBgResize({
+		img : imgs
+		,'delay':60000
+	});
+});
+
+
+/** 使用pjax，新页面加载后，别忘了调用haoPageInit */
+$(function(){
+	$('#side_content .list-group-item').click(function(){
+		$('#side_content .list-group-item-warning').removeClass('list-group-item-warning');
+		$(this).addClass('list-group-item-warning').blur();
+	});
+	$.pjax.defaults.timeout = 30000;
+	$(document).pjax('a[href^="/edit/"],a[href^="/list/"],a[href^="/other/"],a[href^="?"]','#main_content');
+	$(document).on('submit', 'form[data-pjax]', function(event) {
+		event.preventDefault(); // stop default submit behavior
+		$.pjax.submit(event, '#main_content');
+		return false;
+	});
+	$(document).on('pjax:click , submit', function() {
+		haoPageOutIt('#main_content');
+	});
+	$(document).on('pjax:complete , pjax:popstate', function(event,xhr, textStatus, options) {
+		setTimeout(function(){
+			haoPageInit('#main_content');
+		},100);
+	});
+
+	$(document).on('pjax:error', function(xhr, textStatus, error, options) {
+	  	console.log(xhr, textStatus, error, options);
+	  	if (textStatus['responseText'])
+	  	{
+	    	$.alert({
+	    		title: false
+	    		,backgroundDismiss:false
+	    		,content:textStatus['responseText']
+	    	});
+	  	}
+	  	return false;
+	});
+});
+
+
+/** 设定NProgress相关参数 */
+$(function(){
+	$(document).on('pjax:start', function(e,xhr, options) {
+									$('#side_content .list-group-item-warning').removeClass('list-group-item-warning');
+									var requestUrl = options.url;
+									requestUrl = requestUrl.replace(/^http:\/\/.*?(\/.*?)(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/g,'$1');
+									var sideAObj = $('#side_content [href="'+requestUrl+'"]');
+									if (sideAObj.length>0)
+									{
+										sideAObj.addClass('list-group-item-warning').blur();
+										NProgress.configure({ parent:'#'+sideAObj.attrId() , direction:(options['direction'] && options['direction']=='back')?'leftToRightReduced':'leftToRightIncreased' });
+									}
+									else
+									{
+										NProgress.configure({ parent:'#home_navcontainer' , direction:(options['direction'] && options['direction']=='back')?'leftToRightReduced':'leftToRightIncreased' });
+									}
+									NProgress.start();
+								});
+	$(document).on('pjax:end',   function(e,xhr, options) {
+									NProgress.done();
+								});
+});
+
+/** 页面载入后，初始化对应组件。（该方法在ajax后也应该调用哦） */
+$(function(){
+	$.datetimepicker.setLocale('zh');
+
+	$.testRemind.css = {
+        padding: "8px 10px",
+        borderColor: "#aaa",
+        borderRadius: 8,
+        boxShadow: "2px 2px 4px rgba(0,0,0,.2)",
+        background: "#fff url(/css/chrome-remind.png) no-repeat 10px 12px",
+        backgroundSize: "16px",
+        backgroundColor: "#fff",
+        fontSize: 16,
+        zIndex: 10000,
+        textIndent: 20
+    };
+
+	haoPageInit('body');
+
+});

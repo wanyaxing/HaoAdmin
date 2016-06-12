@@ -1,0 +1,176 @@
+body{
+    background-color: #131313;
+}
+
+body {
+    padding-top: 70px;
+}
+#home_navcontainer{
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+#main_content{
+    width: 100%;
+    min-height: 400px;
+    padding: 15px;
+    display: block;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.search_nav{
+	margin:10px 0;
+}
+@media (min-width: 768px) {
+    .input_search_select{
+    	margin-left: -7px;
+    	border-top-left-radius: 0;
+    	border-bottom-left-radius: 0;
+        position: relative;
+    }
+    .search_nav form{
+        float: right;
+    }
+}
+table thead .sortable {
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 30px;
+}
+
+table thead .both {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC');
+}
+
+table thead .asc {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZ0lEQVQ4y2NgGLKgquEuFxBPAGI2ahhWCsS/gDibUoO0gPgxEP8H4ttArEyuQYxAPBdqEAxPBImTY5gjEL9DM+wTENuQahAvEO9DMwiGdwAxOymGJQLxTyD+jgWDxCMZRsEoGAVoAADeemwtPcZI2wAAAABJRU5ErkJggg==');
+}
+
+table thead .desc {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZUlEQVQ4y2NgGAWjYBSggaqGu5FA/BOIv2PBIPFEUgxjB+IdQPwfC94HxLykus4GiD+hGfQOiB3J8SojEE9EM2wuSJzcsFMG4ttQgx4DsRalkZENxL+AuJQaMcsGxBOAmGvopk8AVz1sLZgg0bsAAAAASUVORK5CYII= ');
+}
+table thead .sortable a{
+    color: black;
+    display: block;
+}
+
+/*面包屑 当前链接改色*/
+.breadcrumb .active a{
+    color: black;
+}
+/**/
+
+/* 重写chosen插件的样式*/
+.chosen-container-single .chosen-single,.chosen-container-active.chosen-with-drop .chosen-single{
+    background: none;
+    height: 34px;
+    line-height: 34px;
+}
+.chosen-container-single .chosen-single div b{
+    background-position: 0px 8px;
+}
+.chosen-container-active.chosen-with-drop .chosen-single div b{
+    background-position: -18px 8px;
+}
+.chosen-container-single .chosen-single{
+    border-color: #ccc;
+}
+.chosen-container-single .chosen-single abbr{
+    top: 12px;
+    right: 22px;
+}
+
+.chosen-container-multi .chosen-choices{
+    overflow: auto;
+    height: 34px;
+    border-radius: 4px;
+    border-color: #ccc;
+}
+/**/
+
+/* 查询总数 */
+.pagination-count span{
+    color: black!important;
+    cursor:default!important;
+}
+
+/* jconfirm降低些层级 */
+.jconfirm{
+    z-index: 9999;
+}
+
+.jconfirm-box .div_which_amap_init .amap-info-content{
+    width: 300px;
+}
+
+.jconfirm .jconfirm-box-container .content form{
+    /*min-height: 250px;*/
+}
+
+.jconfirm .jconfirm-box div.content-pane .content{
+    position: relative;
+}
+/**/
+
+/*小屏固定尺寸*/
+@media (max-width: 768px) {
+    body{
+        width:480px;
+    }
+    body.jconfirm-noscroll{
+        -webkit-overflow-scrolling: touch;
+        position:fixed;
+        overflow-y:hidden;
+    }
+    .jconfirm-scrollpane>.container{
+        margin-bottom: 200px;
+    }
+}
+
+
+/*分页去除上下边距*/
+.pagination{
+    margin: 0;
+}
+
+/*默认右对齐*/
+.amap_address{
+    direction: rtl;
+}
+.amap_address:focus{
+    direction: inherit;
+}
+
+/**/
+.select_chosen{
+    min-width: 100px;
+}
+
+/*标识放左边*/
+.form-group{
+    position: relative;
+}
+.form-group .form-control-required{
+    right:0;
+    color: #8a6d3b;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    pointer-events: none;
+}
+.form-horizontal .form-control-required{
+    left:-15px;
+}
