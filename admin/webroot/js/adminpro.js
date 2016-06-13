@@ -268,7 +268,7 @@ function chosen_winnow_results(e,cObj)
 					var hResult         = new HaoResult(result);
 					var names           = hResult.search(searchNamePath);
 					var values          = hResult.search(searchValuePath);
-					if (names.length == values.length)
+					if (names.length > 0 && names.length == values.length)
 					{
 						var isNewFound = false;
 						for (var i in names)
