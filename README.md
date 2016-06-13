@@ -251,3 +251,61 @@
 </form>
 
 ```
+
+
+
+--------------------------------------------------------
+
+<center>             HaoAdmin开工             </center>
+
+--------------------------------------------------------
+
+##在本地电脑里进行代码环境配置##
+
+* 在本地建项目文件夹部署sftp
+
+* 下载服务器目录到本地文件夹
+
+* 在本地电脑里，清空admin目录后复制框架基础文件到admin目录
+```
+cd admin
+svn co https://wanyaxing@github.com/wanyaxing/HaoAdmin/trunk/admin/ .
+svn update
+```
+
+* 新建并配置config.php
+
+* 上传本地的文件到sftp服务器。
+
+* 在服务器里，提交文件到项目svn。
+```
+// svn 忽略日志文件，但保留文件夹。
+cd admin
+svn add logs
+svn commit -m "Adding 'logs'"
+svn propset svn:ignore '*' logs
+svn ci -m 'Adding "logs" and ignoring its contents.'
+
+
+// 提交所有文件
+find .  | xargs svn add --force *.*
+svn ci . -m '提交api框架'
+```
+
+* 在服务器里，lib目录下，添加HaoConnnect的软链接
+```
+cd admin/lib
+svn propset svn:externals "^/example/web/HaoConnect/php/HaoConnect/ HaoConnect" .
+svn ci -m 'Adding externals of "HaoConnect".'
+
+/*也可以直接编辑*/
+export SVN_EDITOR=vim
+svn propedit svn:externals .
+```
+
+* 同步代码到本地
+
+＊ 配置HaoConnect/目录下的HaoConfig.php
+
+* 可以访问ADMIN了：
+[http://admin-example.haoxitech.com](http://admin-example.haoxitech.com)
