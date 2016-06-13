@@ -1,7 +1,6 @@
 <?php
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		session_start();
 		$requestResult = HaoConnect::request('axapi/check_captcha',$_REQUEST,'post');
 		if ($requestResult->isResultsOK())
 		{
