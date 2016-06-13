@@ -28,7 +28,7 @@ define('AXAPI_PROJECT_TITLE', '好框架－后台管理' );
 // 默认分页数据量
 define('DEFAULT_PAGE_SIZE', 10);
 
-// 高德地图网页API的key
+// 高德地图  JavaScript API
 define('AMAP_WEBAPI_KEY', '8097249239d135cbf4c9c3d113f16310');
 
 /** 建议：可以引入常量文件（该文件通常来自API的常量文件，两者在svn中做软连接） */
