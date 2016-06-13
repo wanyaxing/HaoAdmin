@@ -306,6 +306,100 @@ class Utility
     	return substr(str_replace(realpath(AXAPI_ELO_PATH),'',$_dbt[0]['file']),0,-1 - strlen(pathinfo($_dbt[0]['file'],PATHINFO_EXTENSION)));
     }
 
+    /** 根据提供的值，创建支持单张图片上传的input，并赋予对应的值。 */
+    public static function strOfPhoto($name,$value=null,$isMultiple=false)
+    {
+        if (!isset($value))
+        {
+            if (isset($GLOBALS['params'][$name]))
+            {
+                $value = $GLOBALS['params'][$name];
+            }
+            else if (isset($_REQUEST[$name]))
+            {
+                $value = $_REQUEST[$name];
+            }
+        }
+
+        $s  = '<input name="'.$name.'" type="hidden" class="form-control input_which_upload_to_qiniu" value="'.$value.'" '.($isMultiple?'multiple':'').'>';
+        return $s;
+    }
+
+    /** 根据提供的值，创建支持单张图片上传的input，并赋予对应的值。 */
+    public static function strOfPhotoMultiple($name,$value=null)
+    {
+        return static::strOfPhoto($name,$value,true);
+    }
+
+    /** 根据提供的值，创建支持切换样式的checkbox，并选中对应的值。 */
+    public static function strOfSwitch($name,$value=null)
+    {
+        if (!isset($value))
+        {
+            if (isset($GLOBALS['params'][$name]))
+            {
+                $value = $GLOBALS['params'][$name];
+            }
+            else if (isset($_REQUEST[$name]))
+            {
+                $value = $_REQUEST[$name];
+            }
+        }
+
+        $s  = '<input name="'.$name.'" type="checkbox" class="form-control bootstrap-switch" value="1" '. ($value==true?'checked':'') .'>';
+        return $s;
+    }
+
+    /** 根据提供的值，创建支持切换样式的checkbox，并选中对应的值。 */
+    public static function strOfTime($name,$value=null)
+    {
+        if (!isset($value))
+        {
+            if (isset($GLOBALS['params'][$name]))
+            {
+                $value = $GLOBALS['params'][$name];
+            }
+            else if (isset($_REQUEST[$name]))
+            {
+                $value = $_REQUEST[$name];
+            }
+        }
+
+        $s  = '<input name="'.$name.'" type="string" class="form-control datetimepicker" value="'.$value.'" >';
+        return $s;
+    }
+    /** 根据提供的值，创建富文本样式的输入去，并填充对应的值。 */
+    public static function strOfText($name,$value=null)
+    {
+        if (!isset($value))
+        {
+            if (isset($GLOBALS['params'][$name]))
+            {
+                $value = $GLOBALS['params'][$name];
+            }
+            else if (isset($_REQUEST[$name]))
+            {
+                $value = $_REQUEST[$name];
+            }
+        }
+
+        $s  = '<script name="'.$name.'" type="text/plain" >'.$value.'</script>';
+        return $s;
+    }
+
+    /** 根据提供的值，创建支持切换样式的checkbox，并选中对应的值。 */
+    public static function strOfCaptcha()
+    {
+        return '<div class="row">'
+                .'<div class="col-xs-10" required>'
+                    .'<input name="captcha_code" type="string" class="form-control" placeholder="验证码">'
+                .'</div>'
+                .'<div class="col-xs-2">'
+                    .'<input name="captcha_key" type="hidden">'
+                .'</div>'
+            .'</div>';;
+    }
+
     /** 根据提供的键值对，创建options字符串，并选中对应的值。 */
     public static function strOfSelect($name,$options,$value=null)
     {
@@ -420,19 +514,24 @@ class Utility
     	$s .= '</select>'."\n";
         return $s;
     }
-    /** 根据提供的键值对，创建标签类型的options字符串。用户可以手动增加标签。 */
-    public static function strOfChosenWithTags($name,$selectValues=null,$options=null,$isMultiple=false,$placeholder=null)
+    /** 根据提供的键值对，创建标签类型的options字符串。用户可以手动增加标签。 （默认多选）*/
+    public static function strOfChosenWithTags($name,$selectValues=null,$options=null,$isMultiple=true,$placeholder=null)
     {
-    	$strAttrs =  'search-type="tags" ';
-    	if (!W2Array::isList($options))
-    	{
-    		$tmp = array();
-    		foreach ($options as $op) {
-    			$tmp[$op] = $op;
-    		}
-    		$options = $tmp;
-    	}
-    	return static::strOfChosen($name,$strAttrs,$selectValues,null,$options,$isMultiple,$placeholder);
+        $strAttrs =  'search-type="tags" ';
+        if (!W2Array::isList($options))
+        {
+            $tmp = array();
+            foreach ($options as $op) {
+                $tmp[$op] = $op;
+            }
+            $options = $tmp;
+        }
+        return static::strOfChosen($name,$strAttrs,$selectValues,null,$options,$isMultiple,$placeholder);
+    }
+    /** 根据提供的键值对，创建分类类型的options字符串。用户可以手动增加分类。（默认单选） */
+    public static function strOfChosenWithCategory($name,$selectValues=null,$options=null,$isMultiple=false,$placeholder=null)
+    {
+    	return static::strOfChosenWithTags($name,$selectValues,$options,$isMultiple,$placeholder);
     }
     /** 根据提供的键值对，创建ajax类型的options字符串。用户可以搜索关键字后增加数据。 */
     public static function strOfChosenWithAjax($name,$ajaxUrl,$valuePath,$namePath=null,$selectValues=null,$selectNames=null,$options=null,$isMultiple=false,$placeholder=null)
