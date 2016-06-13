@@ -1,0 +1,96 @@
+<?php
+/**
+ * 在/list/目录下的php文件都会被视为独立的列表页
+ * 在页面载入过程中，系统会从各列表页读取配置，组成侧边栏。
+ * 所以，请务必遵循开发规范，不建议在该目录放置其他文件。
+ */
+
+/*
+ *  本页面的配置，可用于数据请求、面包屑导航、侧边栏等多个场景
+ *  本页面可被重复include，
+ *  如：侧边栏时引入本页，则会在读取到配置后return，不会发生请求和输出页面代码
+ *  如：正文中引入本页，则会发生请求并执行页面输出。
+ *
+ *  参数详解：
+ *  parent   * 分组，用于侧边栏进行分组
+ *  name     * 名称，当前页标题
+ *  rank     * 排序级别，在分组中，将以此作为排序依据。
+ *  isAuthed   是否已授权，该字段是bool类型，用于判断当前页是否可被访问，通常在此处会使用用户数据进行判断。
+ *  url        当前页的外网地址，此处已经使用函数自行实现，如无必要，请勿修改。
+ *  params     锁定参数，在后续页面处理过程中，会强制使用此处设定的参数进行覆盖。如，此处设定status=2，则即使用户在页面链接里指定status为其他数字，在本页中status参数也永远是2。（特殊情况除外，详见Utility::getParamsOfListInRequest方法）
+ *  urlParam * 接口，此处声明了当前列表页数据对应的接口地址。
+ */
+    if (!Utility::breadCrumb(array(
+                     'parent'   => '框架示范'
+                    ,'name'     => '列表示范'
+                    ,'rank'     => 999
+                    ,'isAuthed' =>  is_object($currentUserResult) && $currentUserResult->find('level')>=5
+                    ,'url'      => Utility::getCurrentFileUrl()
+                    ,'params'   => array()
+                    ,'urlParam'   => 'example/list'
+                    ))){return;}
+
+
+/*
+ *  变量：请求参数，用于数据请求和翻页设定
+ *  支持默认参数、$_REQUEST、锁定参数，三者合并（后者覆盖前者）
+ *  通常此处会用于设定默认参数，否则不需要修改。
+ *  请注意默认参数与锁定参数的区别。
+ */
+    $params = Utility::getParamsOfListInRequest(array('size'=>DEFAULT_PAGE_SIZE,'user_target_id'=>0),$breadCrumb['params']);
+
+/*
+ * 发起请求，并得到请求结果。
+ * 此处params变量是地址传递，在请求结束后，该变量中page_max和count_total的值会被更新（如果原来没有这些值的话）。
+ * 这里支持第二个参数，用于进行报错处理，如果不传第二个参数，则会直接打印错误信息并退出。
+ */
+    $requestResult = Utility::requestBreadCrumb($params);
+
+?>
+<!-- 面包屑导航 -->
+<?= Utility::strOfBreadCrumb($breadCrumb) ?>
+
+<!-- 筛选区 -->
+<div class="search_nav form-inline clearfix">
+    <form class="" action="?" data-pjax="true">
+        <div class="form-group">
+            <?= Utility::strOfChosenWithAjax('user_id','/ajax_haoconnect.php?url_param=user/list&keyword=','.*?\d>id','.*?\d>username',W2HttpRequest::getRequestString('user_id'),null,null,false,'指定用户') ?>
+            <input name="keyword" type="text" class="form-control" placeholder="搜索" value=<?= W2HttpRequest::getRequestString('keyword') ?>>
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>应用</button>
+        </div>
+    </form>
+</div>
+
+<!-- 正文表格 -->
+<div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <!-- 表头（支持排序） -->
+        <thead>
+            <?= Utility::getThWithOrder('ID','id')?>
+            <th>指定用户</th>
+            <th>手机号</th>
+            <th>邮箱</th>
+            <th>地址</th>
+            <?= Utility::getThWithOrder('创建时间','create_time')?>
+        </thead>
+        <!-- 内容（逐列处理） -->
+        <tbody>
+            <?php foreach ($requestResult->results() as $detailResult) : ?>
+            <tr>
+                <td><a href=<?= '/edit/example_detail?id='.$detailResult->find('id') ?> ><?= $detailResult->find('id') ?></a></td>
+                <td><?= HaoConnect::find('username','user/detail',array('id'=>$detailResult->find('userID'))) ?></td>
+                <td><?= $detailResult->find('telephone') ?></td>
+                <td><?= $detailResult->find('email') ?></td>
+                <td><?= $detailResult->find('address')  ?></td>
+                <td><?= $detailResult->find('createTime')  ?></td>
+            </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- 操作按钮：新增 -->
+<a href=<?= '/edit/example_detail?'.http_build_query($breadCrumb['params']) ?> class="btn btn-default pull-right" ><span class="glyphicon glyphicon-plus"></span>新增</a>
+
+<!-- 分页设定 -->
+<?= Utility::strOfPagination($params);  ?>
