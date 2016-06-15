@@ -182,7 +182,7 @@ HaoAdmin = {
 			_id = $(_this).find('td').eq(0).html();
 		}
 		var pathname = window.location.pathname;
-		$.get(pathname+'?is_only_filter_with_request=1&page_max=1&count_total=1&status=0,1,2,3&id='+_id,function(result){
+		$.get(pathname+'?is_only_filter_with_request=1&page_max=1&count_total=1&status=1,2,3,0&id='+_id,function(result){
 			var trNode = $(result).find('tbody tr').addClass('success');
 			haoPageInit(trNode);
 			if (_this && $(_this).closest('tr').length>0)
