@@ -193,7 +193,7 @@
 		</thead>
 		<tbody>
 	<?php
-		$results = $requestResult->results;
+		$results = $requestResult->results();
 		if (isset($results['keyspace_hits'],$results['keyspace_misses']))
 		{
 			print('<tr><td></td><td>缓存命中率</td><td>'.intval(100* $results['keyspace_hits']/($results['keyspace_hits']+$results['keyspace_misses'])).'%</td></tr>');
