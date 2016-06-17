@@ -66,44 +66,88 @@ function haoPageInit(target)
 	}
 	// 支持ajax的选择组件
 	$target
-		.find('select[search-type]')
-		.bind({
-				'chosen:ready':chosen_ready
-				,'chosen:winnow_results':chosen_winnow_results
-				})
-		.chosen({
-					 allow_single_deselect: true
-					,search_contains:true
+		.find('select[search-type]').each(function(){
+			var that = this;
+			$LAB
+				.script('/third/chosen/chosen.jquery.js')
+				.wait(function(){
+					$(that)
+						.bind({
+							'chosen:ready':chosen_ready
+							,'chosen:winnow_results':chosen_winnow_results
+							})
+						.chosen({
+							 allow_single_deselect: true
+							,search_contains:true
+							});
 				});
+		})
 	// 七牛上传
     $target.find('input.input_which_upload_to_qiniu').each(function(){
-        HaoUploader.init(this);
-    });
+    	var that = this;
+		$LAB
+			.script('/third/haouploader/js/webuploader/webuploader.min.js')
+			.script('/third/haouploader/js/webuploader-haoplus.js')
+			.script('/third/haouploader/js/sortable/Sortable.js')
+			.script('/third/haouploader/js/haouploader.js')
+			.wait(function(){
+			        HaoUploader.init(that);
+			    });
+		});
     // 时间组件
-    $target
-		.find('input.datetimepicker').datetimepicker({
-		 // timepicker:false,
-		 format:'Y-m-d H:i:s',
-		 step:10,
-		 dayOfWeekStart:1,
-		 mask:true, // '9999/19/39 29:59' - digit is the maximum possible for a cell
-		}).blur();
+    $target.find('input.datetimepicker').each(function(){
+    	var that = this;
+		$LAB
+			.script('/third/datetimepicker/jquery.datetimepicker.full.js')
+			.wait(function(){
+					$.datetimepicker.setLocale('zh');
+				    $(that).datetimepicker({
+						 // timepicker:false,
+						 format:'Y-m-d H:i:s',
+						 step:10,
+						 dayOfWeekStart:1,
+						 mask:true, // '9999/19/39 29:59' - digit is the maximum possible for a cell
+						}).blur();
+			    });
+		});
+
 	// 地址转地图组件
     $target.find('input.input_which_is_address').each(function(){
-        HaoAmap.init(this);
-    });
+    	var that = this;
+		$LAB
+			.script('http://webapi.amap.com/maps?v=1.3&key='+AMAP_WEBAPI_KEY+'&plugin=AMap.PlaceSearch')
+			.script('/third/haoamap.js')
+			.wait(function(){
+			        HaoAmap.init(that);
+			    });
+		});
+
 	// checkbox转开关
-    $target.find('input[type=checkbox].bootstrap-switch').bootstrapSwitch();
+    $target.find('input[type=checkbox].bootstrap-switch').each(function(){
+    	var that = this;
+		$LAB
+			.script('/third/bootstrap-switch/js/bootstrap-switch.min.js')
+			.wait(function(){
+				    $(that).bootstrapSwitch();
+			    });
+		});
 
     // 富文本编辑器
     $target.find('script[type="text/plain"]').each(function(){
-	    var ue = UE.getEditor($(this).attrId(),{
-						    	elementPathEnabled:false//是否启用元素路径，默认是显示
-						    	,toolbars: [[
-						            'emotion','bold', 'italic', 'underline','strikethrough','forecolor', 'backcolor','|', 'insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|','|','insertimage','|','undo', 'redo','|','source'
-						        	]]
-						    });
-    });
+    	var that = this;
+		$LAB
+			.script('/third/ueditor/ueditor.config.js')
+			.script('/third/ueditor/ueditor.all.min.js')
+			.wait(function(){
+				    var ue = UE.getEditor($(that).attrId(),{
+									    	elementPathEnabled:false//是否启用元素路径，默认是显示
+									    	,toolbars: [[
+									            'emotion','bold', 'italic', 'underline','strikethrough','forecolor', 'backcolor','|', 'insertorderedlist', 'insertunorderedlist','|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|','|','insertimage','|','undo', 'redo','|','source'
+									        	]]
+									    });
+			    });
+		});
+
 
     var ajaxCaptcha = null;
     // 图片验证码
@@ -138,22 +182,16 @@ function haoPageOutIt(target)
 {
 	var $target = $(target);
 // 支持ajax的选择组件
-	$target.find('select[search-type]').chosen("destroy");
+	$target.find('select[search-type]').each(function(){$(this).chosen("destroy");});
 // 七牛上传
-    $target.find('.input_which_upload_to_qiniu').each(function(){
-        HaoUploader.destroy(this);
-    });
+    $target.find('.input_which_upload_to_qiniu').each(function(){ HaoUploader.destroy(this);});
 // 时间组件
-    $target.find('input.datetimepicker').datetimepicker('destroy');
+    $target.find('input.datetimepicker').each(function(){$(this).datetimepicker('destroy');});
 // 地址转地图组件
-    $target.find('.input_which_is_address').each(function(){
-        HaoAmap.destroy(this);
-    });
+    $target.find('.input_which_is_address').each(function(){HaoAmap.destroy(this);});
 // checkbox转开关
 // 富文本编辑器
-    $target.find('script[type="text/plain"]').each(function(){
-	    UE.getEditor($(this).attrId()).destroy();
-    });
+    $target.find('script[type="text/plain"]').each(function(){UE.getEditor($(this).attrId()).destroy();});
 // 图片验证码
     $target.find('[name=captcha_key]').siblings('img').unbind().remove();
 }
@@ -393,7 +431,6 @@ $(function(){
 
 /** 页面载入后，初始化对应组件。（该方法在ajax后也应该调用哦） */
 $(function(){
-	$.datetimepicker.setLocale('zh');
 
 	$.testRemind.css = {
         padding: "8px 10px",

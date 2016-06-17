@@ -27,24 +27,16 @@
   <script src="/third/bootstrap/respond.min.js"></script>
 <![endif]-->
 <script type="text/javascript" src="/third/jquery-confirm/dist/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="/third/haouploader/js/webuploader/webuploader.min.js"></script>
-<script type="text/javascript" src="/third/haouploader/js/webuploader-haoplus.js"></script>
-<script type="text/javascript" src="/third/haouploader/js/sortable/Sortable.js"></script>
-<script type="text/javascript" src="/third/haouploader/js/haouploader.js"></script>
-<script type="text/javascript" src="/third/md5/md5.js"></script>
 <script type="text/javascript" src="/third/jquery.pjax.js"></script>
-<script type="text/javascript" src="/third/chosen/chosen.jquery.js"></script>
 <script type="text/javascript" src="/third/jquery.ez-bg-resize.js"></script>
 <script type="text/javascript" src="/third/haoconnect/haoresult.js"></script>
 <script type="text/javascript" src="/third/haoconnect/haoconnect.js"></script>
-<script type="text/javascript" src=http://webapi.amap.com/maps?v=1.3&key=<?=AMAP_WEBAPI_KEY?>&plugin=AMap.PlaceSearch></script>
-<script type="text/javascript" src="/third/haoamap.js"></script>
-<script type="text/javascript" src="/third/datetimepicker/jquery.datetimepicker.full.js"></script>
-<script type="text/javascript" src="/third/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="/third/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="/third/ueditor/ueditor.all.min.js"></script>
-<script type="text/javascript" src="/third/jquery-html5Validate.js"></script>
 <script type="text/javascript" src="/third/nprogress/nprogress.js"></script>
+<script type="text/javascript" src="/third/jquery-html5Validate.js"></script>
+<script type="text/javascript">
+    AMAP_WEBAPI_KEY = "<?= AMAP_WEBAPI_KEY ?>";
+</script>
+<script type="text/javascript" src="/third/LABjs/LAB.min.js"></script>
 <script type="text/javascript" src="/js/haoadmin.js"></script>
 <script type="text/javascript" src="/js/adminpro.js"></script>
 </head>
