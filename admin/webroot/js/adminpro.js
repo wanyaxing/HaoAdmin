@@ -21,7 +21,7 @@ if (typeof jQuery === 'undefined') {
 /** 重新注册对应的组件行为（比如一些特殊的下拉框、地图组件，上传图片的组件之类的。 */
 function haoPageInit(target)
 {
-	// console.log('debug');
+	console.log('haoPageInit',target);
 	if (!target){target='body';}
 	var $target = $(target);
 
@@ -180,6 +180,7 @@ function haoPageInit(target)
 /*注销相关事件*/
 function haoPageOutIt(target)
 {
+	console.log('haoPageOutIt',target);
 	var $target = $(target);
 // 支持ajax的选择组件
 	$target.find('select[search-type]').each(function(){$(this).chosen("destroy");});
@@ -382,7 +383,7 @@ $(function(){
 		$.pjax.submit(event, '#main_content');
 		return false;
 	});
-	$(document).on('pjax:click , submit', function() {
+	$(document).on('pjax:click , submit , pjax:beforePopstate', function() {
 		haoPageOutIt('#main_content');
 	});
 	$(document).on('pjax:complete , pjax:popstate', function(event,xhr, textStatus, options) {

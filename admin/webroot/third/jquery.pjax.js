@@ -456,6 +456,12 @@ function onPjaxPopstate(event) {
     var container = $(cache[0] || state.container), contents = cache[1]
 
     if (container.length) {
+      var popstateEvent = $.Event('pjax:beforePopstate', {//axing add
+        state: state,
+        direction: direction
+      });
+      container.trigger(popstateEvent);
+
       if (previousState) {
         // Cache current container before replacement and inform the
         // cache which direction the history shifted.
