@@ -1,6 +1,6 @@
 <?php
 
-	$urlParam = 'cache/emptyCache';
+	$urlParam = 'cache/empty_cache';
 
 ?>
 <form class="form-horizontal clearfix" method="post">

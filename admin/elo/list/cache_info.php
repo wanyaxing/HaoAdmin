@@ -182,6 +182,7 @@
 
 <div class="search_nav form-inline clearfix">
 	<a href="javascript:;" onclick="HaoAdmin.show('/edit/cache_empty')" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-refresh"></span>清空缓存</a>
+	<a href="javascript:;" onclick="HaoAdmin.show('/edit/cache_reset_stat')" class="btn btn-default pull-right" ><span class="glyphicon glyphicon-refresh"></span>重置统计</a>
 </div>
 
 <div class="table-responsive">
@@ -193,7 +194,7 @@
 		</thead>
 		<tbody>
 	<?php
-		$results = $requestResult->results();
+		$results = $requestResult->results;
 		if (isset($results['keyspace_hits'],$results['keyspace_misses']))
 		{
 			print('<tr><td></td><td>缓存命中率</td><td>'.intval(100* $results['keyspace_hits']/($results['keyspace_hits']+$results['keyspace_misses'])).'%</td></tr>');
