@@ -159,7 +159,7 @@ function haoPageInit(target)
 	    	img.click(function(){
 	    		var that = this;
 	    		if (ajaxCaptcha){HaoConnect.abort(ajaxCaptcha);}
-	    		ajaxCaptcha = HaoConnect.ajax('axapi/get_captcha').done(function(hResult){
+	    		ajaxCaptcha = HaoConnect.request('axapi/get_captcha').done(function(hResult){
 		    			$(that).attr('src',hResult.find('url'));
 		    			$(that).siblings('[name=captcha_key]').val(hResult.find('captchaKey'));
 			    		var random = Math.random();

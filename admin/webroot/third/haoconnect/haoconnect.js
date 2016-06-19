@@ -5,7 +5,7 @@ if (typeof jQuery === 'undefined') {
 HaoConnect = {
 	'ajaxList':{}
 	/** 请求接口，并立即得到结果。（不是异步哦） */
-	,request: function( urlParam,  params, method){
+	,ajaxAsync: function( urlParam,  params, method){
 		if ( !params ) { params = {};     }
 		if ( !method ) { method = 'get';  }
 		params['url_param'] = urlParam;
@@ -31,7 +31,7 @@ HaoConnect = {
 		return hResult;
 	}
 	/** 异步请求，返回的是ajax异步对象(支持Promise哦.) */
-	,ajax: function( urlParam,  params, method){
+	,request: function( urlParam,  params, method){
 		if ( !params ) { params = {};     }
 		if ( !method ) { method = 'get';  }
 		params['url_param'] = urlParam;
