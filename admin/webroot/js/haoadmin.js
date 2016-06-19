@@ -192,6 +192,7 @@ HaoAdmin = {
 			else
 			{
 				$('#main_content tbody').prepend(trNode);
+				$('#main_content tbody .haoadmin_noresults').remove();
 			}
 		});
 	}

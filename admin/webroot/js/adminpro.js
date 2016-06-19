@@ -39,7 +39,7 @@ function haoPageInit(target)
 	//空数据提示
 	if($('#main_content tbody').children().length == 0)
 	{
-		$('#main_content tbody').html('<tr><td colspan='+($('#main_content thead th').length)+' align=center>未查询到任何结果哦。</td></tr>');
+		$('#main_content tbody').html('<tr class="haoadmin_noresults"><td colspan='+($('#main_content thead th').length)+' align=center>未查询到任何结果哦。</td></tr>');
 	}
 
 	//required表单标识增强
