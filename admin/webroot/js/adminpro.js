@@ -411,7 +411,7 @@ $(function(){
 $(function(){
 	$(document).on('pjax:start', function(e,xhr, options) {
 									$('#side_content .list-group-item-warning').removeClass('list-group-item-warning');
-									var requestUrl = options.url;
+									var requestUrl = options.requestUrl?options.requestUrl:options.url;
 									requestUrl = requestUrl.replace(/^http:\/\/.*?(\/.*?)(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/g,'$1');
 									var sideAObj = $('#side_content [href="'+requestUrl+'"]');
 									if (sideAObj.length>0)
