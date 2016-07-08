@@ -112,6 +112,10 @@ define("AX_TIMER_START", microtime (true));//记录请求开始时间
             {
                 include AXAPI_ELO_PATH .$requestPath.'.php';
             }
+            else if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE ') !==false && (strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 6.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 7.")  || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 8.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 9.")))
+            {
+                include AXAPI_ELO_PATH . '/ie_no_more.php' ;
+            }
             else
             {
                 include AXAPI_ELO_PATH . '/home.php' ;
