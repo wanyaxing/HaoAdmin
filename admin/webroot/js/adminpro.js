@@ -223,7 +223,7 @@ function chosen_ready(e,cObj)
 			{
 				var xhr = optionObj.data('search-xhr');
 				if (xhr) { xhr.abort();}
-				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+searchNamePath+'&search_paths[]='+searchValuePath+'&'+searchValueKey+'='+optionObj.val(),function(result){
+				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+encodeURIComponent(searchNamePath)+'&search_paths[]='+encodeURIComponent(searchValuePath)+'&'+searchValueKey+'='+optionObj.val(),function(result){
 					var hResult         = new HaoResult(result);
 					var names           = hResult.search(searchNamePath);
 					var values          = hResult.search(searchValuePath);
@@ -303,7 +303,7 @@ function chosen_winnow_results(e,cObj)
 				var searchNamePath  = chosen.form_field_jq.attr('search-name-path');
 				var searchValuePath = chosen.form_field_jq.attr('search-value-path');
 
-				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+searchNamePath+'&search_paths[]='+searchValuePath,function(result){
+				xhr = $.getJSON(ajaxUrl+'&search_paths[]='+encodeURIComponent(searchNamePath)+'&search_paths[]='+encodeURIComponent(searchValuePath),function(result){
 					var hResult         = new HaoResult(result);
 					var names           = hResult.search(searchNamePath);
 					var values          = hResult.search(searchValuePath);
