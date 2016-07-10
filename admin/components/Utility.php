@@ -499,7 +499,7 @@ class Utility
 		}
 
 
-    	$s  = '<select name="'.$name.'" class="form-control select_chosen"'
+    	$s  = '<select name="'.$name.($isMultiple?'[]':'').'" class="form-control select_chosen"'
     						.' ' . $strAttrs
     						.(isset($GLOBALS['breadCrumb']['params'][$name])?' disabled':'')
     						.(!is_null($placeholder)?' data-placeholder="'.$placeholder.'"':'')
