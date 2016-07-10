@@ -162,11 +162,11 @@ HaoAdmin = {
             ,closeIcon: false
             ,animation: 'scale'
             ,submitFail:function(result){
-            	if (result['errorCode'] == 134)
-            	{//验证码错误
+            	// if (result['errorCode'] == 134)
+            	// {//验证码错误
             		$('[name="captcha_code"]').val('');
             		$('[name="captcha_key"]').siblings('img').trigger('click');
-            	}
+            	// }
             	return true;
             }
             ,onClose:function(){
