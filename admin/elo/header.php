@@ -33,10 +33,13 @@
 <script type="text/javascript" src="/third/haoconnect/haoconnect.js"></script>
 <script type="text/javascript" src="/third/nprogress/nprogress.js"></script>
 <script type="text/javascript" src="/third/jquery-html5Validate.js"></script>
-<script type="text/javascript">
-    AMAP_WEBAPI_KEY = "<?= AMAP_WEBAPI_KEY ?>";
-</script>
 <script type="text/javascript" src="/third/LABjs/LAB.min.js"></script>
 <script type="text/javascript" src="/js/haoadmin.js"></script>
 <script type="text/javascript" src="/js/adminpro.js"></script>
+<?php if (is_object($currentUserResult)): ?>
+<script type="text/javascript">
+    AMAP_WEBAPI_KEY = "<?= AMAP_WEBAPI_KEY ?>";
+</script>
+<script type="text/javascript" src="/js/easemob.js"></script>
+<?php endif; ?>
 </head>
