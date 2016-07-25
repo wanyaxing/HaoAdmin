@@ -174,3 +174,14 @@ table thead .sortable a{
 .form-horizontal .form-control-required{
     left:-15px;
 }
+
+#btn_easemob{
+    color:#9E9E9E!important;
+}
+#btn_easemob.easemob_online{
+    color:#3ec951!important;
+}
+
+#div_alert_notice{
+    padding: 0 15px;
+}
