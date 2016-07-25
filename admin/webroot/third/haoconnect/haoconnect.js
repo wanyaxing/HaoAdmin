@@ -48,6 +48,12 @@ HaoConnect = {
 		this.ajaxList[deferred] = ajax;
 		return deferred;
 	}
+    ,get:function(urlParam,  params){
+        return this.request(urlParam,  params,'get');
+    }
+    ,post:function(urlParam,  params){
+        return this.request(urlParam,  params,'post');
+    }
 	,abort:function(deferred){
 		if (this.ajaxList[deferred])
 		{
