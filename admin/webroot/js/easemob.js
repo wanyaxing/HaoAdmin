@@ -17,7 +17,7 @@ $(function(){
             HaoConnect.request('easemob/get_my_auth_info').done(function(hResult){
                 if (hResult.isResultsOK())
                 {
-                    if (Notification )
+                    if (window.Notification )
                     {
                         if (Notification.permission !== 'granted')
                         {
@@ -32,7 +32,7 @@ $(function(){
                         }
 
                     }
-                    $('#home_navcontainer').append('<a id="btn_easemob" class="navbar-brand" href="javascript:;">●</a>');
+                    $('#home_navcontainer .navbar-header').append('<a id="btn_easemob" class="navbar-brand" href="javascript:;">●</a>');
                     var easemob_user   = hResult.find('username');
                     var easemob_pwd    = hResult.find('password');
                     var easemob_appKey = hResult.find('appKey');
@@ -96,13 +96,13 @@ $(function(){
                             }
                             //异常时的回调方法
                             ,onError: function(message) {
-                                if (message['data'].indexOf('invalid_grant')>0)
+                                console.log(message);
+                                if (message['data'] && message['data'].indexOf('invalid_grant')>0)
                                 {
                                     HaoConnect.post('easemob/reset_my_auth_info').done(function(){
                                         $('#btn_easemob').trigger('click');
                                     });
                                 }
-                                console.log(message);
                             }
                     });
                     $('#btn_easemob').click(function(){
