@@ -16,30 +16,38 @@
 </html>
 <?php else: ?>
 <body>
-    <nav class="navbar navbar-fixed-top">
-      <div id="home_navcontainer" class="container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div id="home_navcontainer" class="container-fluid">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#haoadmin-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
           <a class="navbar-brand" href="/">
             <?= AXAPI_PROJECT_TITLE ?>
           </a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="glyphicon glyphicon-user"></span><?= Utility::getCurrentUserName() ?><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href=/edit/user_detail?id=<?= Utility::getCurrentUserId() ?> >个人中心</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="javascript:;" onclick="HaoAdmin.user_login()" >退出</a></li>
-            </ul>
-          </li>
-        </ul>
+        <div class="collapse navbar-collapse" id="haoadmin-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="glyphicon glyphicon-user"></span><?= Utility::getCurrentUserName() ?><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href=/edit/user_detail?id=<?= Utility::getCurrentUserId() ?> >个人中心</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="javascript:;" onclick="HaoAdmin.user_login()" >退出</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
     <div class="container" id="home_container">
       <div class="row" id="div_alert_notice">
       </div>
       <div class="row">
-        <div class="col-md-3">
+        <div id="side_div" class="col-md-3">
           <div id="side_content" class="panel-group nav" role="tablist">
             <?php include AXAPI_ELO_PATH.'/side.php'; ?>
           </div>

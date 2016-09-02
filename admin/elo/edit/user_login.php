@@ -40,10 +40,10 @@
 	<div class="form-group">
 		<label>验证码</label>
 		<div class="row">
-			<div class="col-xs-10" required>
+			<div class="col-xs-9" required>
 				<input name="captcha_code" type="string" class="form-control" placeholder="验证码">
 			</div>
-			<div class="col-xs-2">
+			<div class="col-xs-3">
 				<input name="captcha_key" type="hidden">
 			</div>
 		</div>

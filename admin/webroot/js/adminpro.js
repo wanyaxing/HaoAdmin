@@ -414,6 +414,10 @@ $(function(){
 									var requestUrl = options.requestUrl?options.requestUrl:options.url;
 									requestUrl = requestUrl.replace(/^http:\/\/.*?(\/.*?)(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/g,'$1');
 									var sideAObj = $('#side_content [href="'+requestUrl+'"]');
+									if (sideAObj.closest('.list-group').css('display')=='none')
+									{
+										sideAObj.closest('.list-group').show();
+									}
 									if (sideAObj.length>0)
 									{
 										sideAObj.addClass('list-group-item-warning').blur();
@@ -427,6 +431,10 @@ $(function(){
 								});
 	$(document).on('pjax:end',   function(e,xhr, options) {
 									NProgress.done();
+									if ($('body').width()==414)
+									{
+										$('#side_content .list-group').hide();
+									}
 								});
 });
 
@@ -448,4 +456,21 @@ $(function(){
 
 	haoPageInit('body');
 
+	$('#side_content .panel-heading').bind('click touchstart touchmove',function(e){
+		console.log(e);
+		if ($('body').width()==414)
+		{
+			$('#side_content .list-group').hide();
+			$(this).siblings('.list-group').show();
+		}
+		else
+		{
+			$('#side_content .list-group').show();
+		}
+	});
+
+	$(window).unload(function(e){
+        e.preventDefault();
+        console.log('嘿嘿嘿');
+    });
 });

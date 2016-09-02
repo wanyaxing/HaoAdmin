@@ -123,7 +123,8 @@ table thead .sortable a{
 /*小屏固定尺寸*/
 @media (max-width: 768px) {
     body{
-        width:480px;
+        width:414px;
+        padding-bottom: 70px;
     }
     body.jconfirm-noscroll{
         -webkit-overflow-scrolling: touch;
@@ -133,8 +134,96 @@ table thead .sortable a{
     .jconfirm-scrollpane>.container{
         margin-bottom: 200px;
     }
+
+
+    #side_div {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 9999;
+        text-align: center;
+        padding: 0;
+    }
+
+    #side_content{
+        margin-bottom:0;
+        -moz-user-select:none;
+        -webkit-user-select:none;
+    }
+
+    #side_content .panel{
+        float: left;
+        margin-top: 0;
+        width: 25%;
+        /*max-height: 58px;*/
+        border-radius: 0;
+        padding:0 2px;
+        background-color: #f5f5f5;
+    }
+    #side_content .panel .panel-heading{
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 10px 0;
+    }
+
+    #side_content .panels_count_1  {  width: 100%;    }
+    #side_content .panels_count_2  {  width: 50%;    }
+    #side_content .panels_count_3  {  width: 33.33%;    }
+    #side_content .panels_count_4  {  width: 25%;    }
+    #side_content .panels_count_5  {  width: 20%;    }
+    #side_content .panels_count_6  {  width: 16.66%;    }
+    #side_content .panels_count_7  {  width: 14.28%;    }
+    #side_content .panels_count_8  {  width: 12.50%;    }
+    #side_content .panels_count_9  {  width: 11.11%;    }
+    #side_content .panels_count_10 {  width: 10%;    }
+    #side_content .panels_count_11 {  width: 9.09%;    }
+    #side_content .panels_count_12 {  width: 8.33%;    }
+
+    #side_content .panels_count_1  .panel-heading{   white-space: nowrap; }
+    #side_content .panels_count_2  .panel-heading{   white-space: nowrap; }
+    #side_content .panels_count_3  .panel-heading{   white-space: nowrap; }
+    #side_content .panels_count_4  .panel-heading{   white-space: nowrap; }
+    #side_content .panels_count_5  .panel-heading{   white-space: nowrap; }
+    #side_content .panels_count_6  .panel-heading{    }
+    #side_content .panels_count_7  .panel-heading{    }
+    #side_content .panels_count_8  .panel-heading{    }
+    #side_content .panels_count_9  .panel-heading{    }
+    #side_content .panels_count_10 .panel-heading{    }
+    #side_content .panels_count_11 .panel-heading{    }
+    #side_content .panels_count_12 .panel-heading{    }
+
+    #side_content .panel .list-group{
+        position: absolute;
+        bottom: 100%;
+        width: 25%;
+        display: none;
+        border: 1px solid #cecece;
+    }
+
+    #side_content .panel:last-child .list-group,#side_content .panels_count_10:nth-last-child(2) .list-group,#side_content .panels_count_11:nth-last-child(2) .list-group,#side_content .panels_count_12:nth-last-child(2) .list-group{
+        right:0;
+    }
+
+    #side_content .panels_count_12:nth-last-child(2) .list-group{
+        right:0;
+    }
+
+    #side_content .panels_count_1 .list-group{  width: 100%;    }
+    #side_content .panels_count_2 .list-group{  width: 50%;    }
+    #side_content .panels_count_3 .list-group{  width: 33.33%;    }
+
+    #side_content .panel .list-group a{
+        border-radius: 0;
+    }
+
 }
 
+/*导航条头信息里的链接不要padding*/
+#side_content .panel-heading a {
+    padding: 0;
+    border: 0;
+}
 
 /*分页去除上下边距*/
 .pagination{

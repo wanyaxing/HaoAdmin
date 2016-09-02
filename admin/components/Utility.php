@@ -551,16 +551,23 @@ class Utility
     }
 
     /** 智能设定面包屑 */
-    public static function breadCrumb($breadCrumb)
+    public static function breadCrumb($bCrumb)
     {
-		if (!isset($GLOBALS['breadCrumb']))
-		{
-			if (isset($GLOBALS['IS_SIDE_TREE']) && $GLOBALS['IS_SIDE_TREE'])
-			{
-				$GLOBALS['SIDE_TREE'][$breadCrumb['parent']][] = $breadCrumb;
+        if (!isset($bCrumb['parent']) || $bCrumb['parent']=='')
+        {
+            $bCrumb['parent'] = $bCrumb['name'];
+        }
+        if (!isset($GLOBALS['breadCrumb']))
+        {
+            if (isset($GLOBALS['IS_SIDE_TREE']) && $GLOBALS['IS_SIDE_TREE'])
+            {
+                if ($bCrumb['isAuthed'])
+                {
+    				$GLOBALS['SIDE_TREE'][$bCrumb['parent']][] = $bCrumb;
+                }
 				return false;
 			}
-			$GLOBALS['breadCrumb'] = $breadCrumb;
+			$GLOBALS['breadCrumb'] = $bCrumb;
 		}
 		return true;
     }

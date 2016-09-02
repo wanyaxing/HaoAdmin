@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=480,user-scalable=0, target-densitydpi=device-dpi">
+<meta name="viewport" content="width=414,user-scalable=0, target-densitydpi=device-dpi">
 <title><?= $title ?></title>
 <link rel="stylesheet" type="text/css" href="/third/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="/third/chosen/chosen.css">

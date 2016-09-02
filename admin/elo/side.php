@@ -11,10 +11,17 @@
 		return min(W2Array::arrayValuesInListArray($GLOBALS['SIDE_TREE'][$a],'rank')) > min(W2Array::arrayValuesInListArray($GLOBALS['SIDE_TREE'][$b],'rank'));
 	});
 
+
+	$panelsCount = count(array_keys($SIDE_TREE));
+
 	foreach ($SIDE_TREE as $parent => $bCrumbs) {
-		echo '          <div class="panel panel-default">'."\n"
-			.'            <div class="panel-heading">'.$parent.'</div>'."\n"
-			.'            <div class="list-group">'."\n";
+		echo '          <div class="panel panel-default panels_count_'.$panelsCount.'">'."\n"
+			.'            <div class="panel-heading">';
+		if (count($bCrumbs)>1 || $bCrumbs[0]['name'] != $parent)
+		{
+			echo $parent.'</div>'."\n"
+				.'            <div class="list-group">'."\n";
+		}
 		usort($bCrumbs, function($a,$b){
 			return $a['rank'] > $b['rank'];
 		});
@@ -27,7 +34,7 @@
 												.$bCrumb['name'].'</a>'."\n";
 			}
 		}
-		echo '            </div>'."\n"
-			.'          </div>';
+		echo '            </div>'."\n";
+		echo '          </div>';
 	}
 ?>
