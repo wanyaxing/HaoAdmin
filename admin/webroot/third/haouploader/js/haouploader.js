@@ -52,7 +52,7 @@ var HaoUploader = {
                         .attr('multiple',inputObj.attr('multiple'))
                         ;
         inputObj.appendTo(dndObj);
-        var targetObj = $('<li class="pick_which_upload_to_qiniu">+</li>').css({'position':'relative'}).insertAfter(inputObj);
+        var targetObj = $('<li class="pick_which_upload_to_qiniu">&nbsp;</li>').css({'position':'relative'}).insertAfter(inputObj);
         // console.log(dndObj[0],targetObj[0]);
 
         var uploader = WebUploader.create({
@@ -103,7 +103,7 @@ var HaoUploader = {
 
         uploader.updateInputValueOfInDND = function()
         {
-            $(dndObj).find(inputObj).val($(dndObj).find('[url_preview]').map(function(){return $(this).attr('url_preview');}).get().join(','));
+            $(dndObj).find(inputObj).val($(dndObj).find('[url_preview]').map(function(){return $(this).attr('url_preview');}).get().join(',')).trigger('change');
         }
 
         uploader.updateDNDOfInputValue = function()
