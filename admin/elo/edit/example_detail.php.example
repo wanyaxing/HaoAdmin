@@ -87,94 +87,94 @@
     <input name="id" type="hidden" class="form-control" placeholder="ID" value="<?= $requestResult->find('id'); ?>">
 
     <div class="form-group">
-        <label class="col-sm-2">名称</label>
-        <div class="col-sm-10" required>
+        <label class="col-xm-2">名称</label>
+        <div class="col-xm-10" required>
             <input name="name" type="string" class="form-control" placeholder="名称" value="<?= $requestResult->find('name'); ?>">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">用户</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">用户</label>
+        <div class="col-xm-10">
           <?= Utility::strOfChosenWithAjax('user_id','/ajax_haoconnect.php?url_param=user/list&keyword=','.*?\d>id','.*?\d>username',$requestResult->find('userID')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">手机号</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">手机号</label>
+        <div class="col-xm-10">
             <input name="telephone" type="tel" class="form-control" placeholder="手机号" value="<?= $requestResult->find('telephone'); ?>">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">邮箱</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">邮箱</label>
+        <div class="col-xm-10">
             <input name="email" type="email" class="form-control" placeholder="邮箱" value="<?= $requestResult->find('email'); ?>">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">性别</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">性别</label>
+        <div class="col-xm-10">
             <?= Utility::strOfSelect('sex',array(0=>'未知',1=>'男',2=>'女'),$requestResult->find('sex')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">VIP</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">VIP</label>
+        <div class="col-xm-10">
             <?= Utility::strOfSwitch('vip',$requestResult->find('vip')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">分类</label>
-        <div class="col-sm-10" >
+        <label class="col-xm-2">分类</label>
+        <div class="col-xm-10" >
             <?= Utility::strOfChosenWithCategory('category',$requestResult->find('category'),array('浩兮','测试','程序员')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">标签</label>
-        <div class="col-sm-10" >
+        <label class="col-xm-2">标签</label>
+        <div class="col-xm-10" >
             <?= Utility::strOfChosenWithTags('tags',$requestResult->find('tags'),array('test','example','haoadmin','haoapi')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">验证码</label>
-        <div class="col-sm-10" >
+        <label class="col-xm-2">验证码</label>
+        <div class="col-xm-10" >
             <?= Utility::strOfCaptcha() ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">服务开始时间</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">服务开始时间</label>
+        <div class="col-xm-10">
             <?= Utility::strOfTime('serve_start_time',$requestResult->find('serveStartTime')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">头像</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">头像</label>
+        <div class="col-xm-10">
             <?= Utility::strOfPhoto('photo',$requestResult->find('photo')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">照片墙</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">照片墙</label>
+        <div class="col-xm-10">
             <?= Utility::strOfPhotoMultiple('photos',$requestResult->find('photos')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">描述</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">描述</label>
+        <div class="col-xm-10">
             <?= Utility::strOfText('description',$requestResult->find('description')) ?>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">地址</label>
-        <div class="col-sm-10" required>
+        <label class="col-xm-2">地址</label>
+        <div class="col-xm-10" required>
             <input name="address" type="hidden" class="form-control input_which_is_address" placeholder="地址" value="<?= $requestResult->find('address'); ?>">
             <input name="lng" type="hidden" class="form-control" placeholder="地址" value="<?= $requestResult->find('lng'); ?>">
             <input name="lat" type="hidden" class="form-control" placeholder="地址" value="<?= $requestResult->find('lat'); ?>">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2">状态</label>
-        <div class="col-sm-10">
+        <label class="col-xm-2">状态</label>
+        <div class="col-xm-10">
             <?= Utility::strOfRadio('status',['删除','正常','草稿','待审'],$requestResult->find('status','1'))?>
         </div>
     </div>
