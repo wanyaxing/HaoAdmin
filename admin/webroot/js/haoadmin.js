@@ -78,47 +78,66 @@ HaoAdmin = {
 			               type: method,
 			               url: ajaxUrl,
 			               data: params,
-			               dataType: 'json',
+			               dataType: 'text',
 			               async:true,//是否使用异步
-			               success: function(result){
-			                    if (result['errorCode'] == 0)
-			                    {
-			                    	if (!options['submitSuccess'] || options['submitSuccess'].apply(that,[result])!=false)
+			               success: function(responseText){
+			               		try
+			               		{
+			               			result = jQuery.parseJSON( responseText );
+				                    if (result['errorCode'] == 0)
+				                    {
+				                    	if (!options['submitSuccess'] || options['submitSuccess'].apply(that,[result])!=false)
+				                    	{
+					                    	if ( typeof(result['result']) == 'string' )
+					                    	{
+					                    		that.setContent(result['result']);
+					                    		haoPageInit(that.$b);
+					                    	}
+					                    	else
+					                    	{
+					                    		that.close();
+					                    		// $.alert({
+						                    	// 	title: false
+						                    	// 	,backgroundDismiss:true
+						                    	// 	,content:'完成'
+						                    	// });
+					                    	}
+				                    	}
+				                    	if (options['afterSubmitSuccess'])
+				                    	{
+					                        options['afterSubmitSuccess'].apply(that,[result]);
+				                    	}
+				                    }
+				                    else
+				                    {
+				                    	if (!options['submitFail'] || options['submitFail'].apply(that,[result])!=false)
+				                    	{
+					                    	$.alert({
+					                    		title: false
+					                    		,backgroundDismiss:true
+					                    		,content:result['errorStr']
+					                    	});
+				                    	}
+										if (options['afterSubmitFail'])
+					                    {
+					                        options['afterSubmitFail'].apply(that,[result]);
+					                    }
+				                    }
+			               		}
+			               		catch(e)
+			               		{
+			                    	if (!options['submitSuccess'] || options['submitSuccess'].apply(that,responseText)!=false)
 			                    	{
-				                    	if ( typeof(result['result']) == 'string' )
-				                    	{
-				                    		that.setContent(result['result']);
-				                    	}
-				                    	else
-				                    	{
-				                    		that.close();
-				                    		// $.alert({
-					                    	// 	title: false
-					                    	// 	,backgroundDismiss:true
-					                    	// 	,content:'完成'
-					                    	// });
-				                    	}
+			                    		that.setContent(responseText);
+			                    		haoPageInit(that.$b);
 			                    	}
 			                    	if (options['afterSubmitSuccess'])
 			                    	{
 				                        options['afterSubmitSuccess'].apply(that,[result]);
 			                    	}
-			                    }
-			                    else
-			                    {
-			                    	if (!options['submitFail'] || options['submitFail'].apply(that,[result])!=false)
-			                    	{
-				                    	$.alert({
-				                    		title: false
-				                    		,backgroundDismiss:true
-				                    		,content:result['errorStr']
-				                    	});
-			                    	}
-									if (options['afterSubmitFail'])
-				                    {
-				                        options['afterSubmitFail'].apply(that,[result]);
-				                    }
-			                    }
+			               		}
+
+
 			               }
 			            });
 					}
@@ -183,6 +202,7 @@ HaoAdmin = {
 		}
 		var pathname = window.location.pathname;
 		$.get(pathname+'?is_only_filter_with_request=1&page_max=1&count_total=1&status=1,2,3,0&id='+_id,function(result){
+			$(_this).trigger('haoadmin_detail_beforeReplace');
 			var trNode = $(result).find('tbody tr').addClass('success');
 			haoPageInit(trNode);
 			if (_this && $(_this).closest('tr').length>0)
@@ -211,6 +231,7 @@ HaoAdmin = {
 			            ,animation: 'scale'
 				        };
 		options['afterSubmitSuccess'] = function(result){
+			$(_this).trigger('haoadmin_detail_beforeUpdate');
 			HaoAdmin.update(_this,typeof(result['results'])=='object'?result['results']['id']:null);
 		}
 		HaoAdmin.show(jcKey,options);
