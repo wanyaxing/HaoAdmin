@@ -89,8 +89,17 @@ var HaoUploader = {
             dnd: dndObj[0],
             paste: dndObj[0],
 
-            //不压缩图片
-            compress:false,
+            //使用WebUploader自带的压缩图片功能（不推荐）
+            compress:inputObj.attr('compress')? true :false,
+
+            //使用lrz压缩图片
+            lrz            :  inputObj.attr('lrz')? true :false,
+            lrz_option     : {
+                    width    : inputObj.attr('lrz_width')?inputObj.attr('lrz_width'):null,
+                    height   : inputObj.attr('lrz_height')?inputObj.attr('lrz_height'):null,
+                    fieldName: inputObj.attr('lrz_field_name')?inputObj.attr('lrz_field_name'):'file',
+                    quality  : inputObj.attr('lrz_quality')?inputObj.attr('lrz_quality'):0.7
+            },
 
             // 只允许选择图片文件。
             accept: {
@@ -250,9 +259,28 @@ var HaoUploader = {
             }
         }
 
-
         uploader.on('beforeFileQueued', function( file ){
             console.log('beforeFileQueued');
+            console.log(file);
+            if (uploader.options.lrz && !(file.source && file.source.source && file.source.source.isLrzed))
+            {
+                if (lrz)
+                {
+                    var lrzOption = {};
+                    if (uploader.options.lrz_option)
+                    {
+                        lrzOption = uploader.options.lrz_option;
+                    }
+                    lrz(file.source.source,lrzOption).then(function(rst){
+                        rst.file.isLrzed = true;
+                        console.log(rst);
+                        uploader.addFile(rst.file);
+                    }).catch(function (err){
+                        console.log(err);
+                    });
+                    return false;
+                }
+            }
             if (!file.previewObj)
             {
                 uploader.newPreviewObjOfFile(file);
