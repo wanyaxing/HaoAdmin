@@ -222,8 +222,6 @@ var HaoUploader = {
                 file.on('statuschange', function( cur, prev ) {
                     if ( prev === 'progress' ) {
                         $prgress.hide().text('');
-                    } else if ( prev === 'queued' ) {
-                        $li.off( 'click' );
                     }
 
                     // 成功
@@ -263,8 +261,8 @@ var HaoUploader = {
                         {
                             uploader.removeFile( file , true);
                         }
-                        uploader.updateInputValueOfInDND();
                         $(this).remove();
+                        uploader.updateInputValueOfInDND();
                     }
                 });
                 $li.insertBefore( uploader.options.pick.id );
