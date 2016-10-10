@@ -307,7 +307,7 @@ class Utility
     }
 
     /** 根据提供的值，创建支持单张图片上传的input，并赋予对应的值。 */
-    public static function strOfPhoto($name,$value=null,$isMultiple=false)
+    public static function strOfPhoto($name,$value=null,$isMultiple=false,$strAttrs='')
     {
         if (!isset($value))
         {
@@ -321,7 +321,7 @@ class Utility
             }
         }
 
-        $s  = '<input name="'.$name.'" type="hidden" class="form-control input_which_upload_to_qiniu" value="'.$value.'" '.($isMultiple?'multiple':'').'>';
+        $s  = '<input name="'.$name.'" type="hidden" class="form-control input_which_upload_to_qiniu" value="'.$value.'" '.($isMultiple?'multiple':'').' '.$strAttrs.'>';
         return $s;
     }
 
@@ -332,7 +332,7 @@ class Utility
     }
 
     /** 根据提供的值，创建支持切换样式的checkbox，并选中对应的值。 */
-    public static function strOfSwitch($name,$value=null)
+    public static function strOfSwitch($name,$value=null,$strAttrs='')
     {
         if (!isset($value))
         {
@@ -346,12 +346,12 @@ class Utility
             }
         }
 
-        $s  = '<input name="'.$name.'" type="checkbox" class="form-control bootstrap-switch" value="1" '. ($value==true?'checked':'') .'>';
+        $s  = '<input name="'.$name.'" type="checkbox" class="form-control bootstrap-switch" value="1" '. ($value==true?'checked':'') .' '.$strAttrs.'>';
         return $s;
     }
 
     /** 根据提供的值，创建支持切换样式的checkbox，并选中对应的值。 */
-    public static function strOfTime($name,$value=null)
+    public static function strOfTime($name,$value=null,$strAttrs='')
     {
         if (!isset($value))
         {
@@ -365,7 +365,7 @@ class Utility
             }
         }
 
-        $s  = '<input name="'.$name.'" type="string" class="form-control datetimepicker" value="'.$value.'" >';
+        $s  = '<input name="'.$name.'" type="string" class="form-control datetimepicker" value="'.$value.'" '.' '.$strAttrs.'>';
         return $s;
     }
     /** 根据提供的值，创建富文本样式的输入去，并填充对应的值。 */
@@ -401,7 +401,7 @@ class Utility
     }
 
     /** 根据提供的键值对，创建options字符串，并选中对应的值。 */
-    public static function strOfSelect($name,$options,$value=null)
+    public static function strOfSelect($name,$options,$value=null,$strAttrs='')
     {
     	if (!isset($value))
     	{
@@ -415,7 +415,7 @@ class Utility
     		}
     	}
 
-    	$s  = '<select name="'.$name.'" class="form-control" '.(isset($GLOBALS['breadCrumb']['params'][$name])?'disabled':'').'> ';
+    	$s  = '<select name="'.$name.'" class="form-control" '.(isset($GLOBALS['breadCrumb']['params'][$name])?'disabled':'').' '.$strAttrs.'> ';
         foreach ($options as $oValue => $oName)
         {
             $s .= 	'<option value="' . $oValue . '"' . (strval($value)===strval($oValue)?' selected':'') . '>'
@@ -427,17 +427,17 @@ class Utility
     }
 
     /** 根据提供的键值对，创建radio组，并选中对应的值。 */
-    public static function strOfRadio($name,$options,$value=null)
+    public static function strOfRadio($name,$options,$selectValue=null,$strAttrs='')
     {
-    	if (!isset($value))
+    	if (!isset($selectValue))
     	{
     		if (isset($GLOBALS['params'][$name]))
     		{
-	    		$value = $GLOBALS['params'][$name];
+	    		$selectValue = $GLOBALS['params'][$name];
     		}
     		else if (isset($_REQUEST[$name]))
     		{
-	    		$value = $_REQUEST[$name];
+	    		$selectValue = $_REQUEST[$name];
     		}
     	}
 
@@ -445,8 +445,8 @@ class Utility
     	//.(isset($GLOBALS['breadCrumb']['params'][$name])?'disabled':'').'> ';
         foreach ($options as $oValue => $oName)
         {
-            $s .= 	'<label class="btn btn-default' . (strval($value)===strval($oValue)?' active':'') . '">'
-		            	.'<input type="radio" name="'.$name.'" autocomplete="off" value="'.$oValue.'"' . (strval($value)===strval($oValue)?' checked':'') . '>'
+            $s .= 	'<label class="btn btn-default' . (strval($selectValue)===strval($oValue)?' active':'') . '">'
+		            	.'<input type="radio" name="'.$name.'" autocomplete="off" value="'.$oValue.'"' . (strval($selectValue)===strval($oValue)?' checked':'') .' '.$strAttrs. '>'
 			            .$oName
 		            .'</label>';
         }
@@ -455,7 +455,7 @@ class Utility
     }
 
     /** 根据提供的键值对，以及参数，创建options字符串。 */
-    public static function strOfChosen($name,$strAttrs,$selectValues=null,$selectNames=null,$options=null,$isMultiple=false,$placeholder=null)
+    public static function strOfChosen($name,$selectValues=null,$options=null,$strAttrs='')
     {
     	if (!isset($selectValues))
     	{
@@ -473,15 +473,6 @@ class Utility
     		$selectValues = explode(',',$selectValues);
     	}
 
-    	if (!isset($selectNames))
-    	{
-    		$selectNames = $selectValues;
-    	}
-    	else if (!is_array($selectNames))
-    	{
-    		$selectNames = explode(',',$selectNames);
-    	}
-
     	if (!isset($options))
     	{
     		$options = array();
@@ -490,7 +481,7 @@ class Utility
 		{
 			if (!isset($options[$oValue]))
 			{
-				$options[$oValue] = $selectNames[$key];
+				$options[$oValue] = $oValue;
 			}
 		}
 		if (count($options)==0 || !isset($options['']))
@@ -498,12 +489,15 @@ class Utility
 			$options = W2Array::merge(array(''=>'...'),$options);
 		}
 
+        if (isset($GLOBALS['breadCrumb']['params'][$name]))
+        {
+            $strAttrs .= ' disabled';
+        }
+
+        $isMultiple = strpos($strAttrs,'multiple')>0;
 
     	$s  = '<select name="'.$name.($isMultiple?'[]':'').'" class="form-control select_chosen"'
     						.' ' . $strAttrs
-    						.(isset($GLOBALS['breadCrumb']['params'][$name])?' disabled':'')
-    						.(!is_null($placeholder)?' data-placeholder="'.$placeholder.'"':'')
-    						.($isMultiple?' multiple':'')
     						.'> ';
         foreach ($options as $oValue => $oName)
         {
@@ -515,9 +509,9 @@ class Utility
         return $s;
     }
     /** 根据提供的键值对，创建标签类型的options字符串。用户可以手动增加标签。 （默认多选）*/
-    public static function strOfChosenWithTags($name,$selectValues=null,$options=null,$isMultiple=true,$placeholder=null)
+    public static function strOfChosenWithTags($name,$selectValues=null,$options=null,$strAttrs=' multiple')
     {
-        $strAttrs =  'search-type="tags" ';
+        $strAttrs .=  'search-type="tags" ';
         if (!W2Array::isList($options))
         {
             $tmp = array();
@@ -526,15 +520,15 @@ class Utility
             }
             $options = $tmp;
         }
-        return static::strOfChosen($name,$strAttrs,$selectValues,null,$options,$isMultiple,$placeholder);
+        return static::strOfChosen($name,$selectValues,$options,$strAttrs);
     }
     /** 根据提供的键值对，创建分类类型的options字符串。用户可以手动增加分类。（默认单选） */
-    public static function strOfChosenWithCategory($name,$selectValues=null,$options=null,$isMultiple=false,$placeholder=null)
+    public static function strOfChosenWithCategory($name,$selectValues=null,$options=null,$strAttrs='')
     {
-    	return static::strOfChosenWithTags($name,$selectValues,$options,$isMultiple,$placeholder);
+    	return static::strOfChosenWithTags($name,$selectValues,$options,$strAttrs);
     }
     /** 根据提供的键值对，创建ajax类型的options字符串。用户可以搜索关键字后增加数据。 */
-    public static function strOfChosenWithAjax($name,$ajaxUrl,$valuePath,$namePath=null,$selectValues=null,$selectNames=null,$options=null,$isMultiple=false,$placeholder=null)
+    public static function strOfChosenWithAjax($name,$ajaxUrl,$valuePath,$namePath=null,$selectValues=null,$options=null,$strAttrs='')
     {
 
     	if (!isset($namePath) && isset($valuePath))
@@ -542,12 +536,29 @@ class Utility
     		$namePath = $valuePath;
     	}
 
-    	$strAttrs =  'search-type="ajax" '
+    	$strAttrs .=  'search-type="ajax" '
 					.'search-ajax-url="'.$ajaxUrl.'" '
 					.'search-value-path="'.$valuePath.'" '
 					.'search-name-path="'.$namePath.'" ';
 
-    	return static::strOfChosen($name,$strAttrs,$selectValues,$selectNames,$options,$isMultiple,$placeholder);
+    	return static::strOfChosen($name,$selectValues,$options,$strAttrs);
+    }
+
+    /** 根据提供的三级地区的值，创建ajax类型的options字符串。用户可以搜索关键字查找地区，也支持地区的三级联动。 */
+    public static function strOfChosenWithZipArea($name,$selectValues=null)
+    {
+        switch ($name) {
+            case 'area_main':
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=1&area_parent=0&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                break;
+            case 'area_second':
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=2&area_parent={[name=area_main]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                break;
+            case 'area_third':
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=3&area_parent={[name=area_second]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                break;
+        }
+        return '错误的使用方法，请检查调用strOfChosenWithZipArea的相关代码';
     }
 
     /** 智能设定面包屑 */
@@ -561,11 +572,15 @@ class Utility
         {
             if (isset($GLOBALS['IS_SIDE_TREE']) && $GLOBALS['IS_SIDE_TREE'])
             {
-                if ($bCrumb['isAuthed'])
+                if (!$bCrumb['isAuthed'] || (isset($bCrumb['isHidden']) && $bCrumb['isHidden']==true))
                 {
-    				$GLOBALS['SIDE_TREE'][$bCrumb['parent']][] = $bCrumb;
+                    ;
                 }
-				return false;
+                else
+                {
+                    $GLOBALS['SIDE_TREE'][$bCrumb['parent']][] = $bCrumb;
+                }
+                return false;
 			}
 			$GLOBALS['breadCrumb'] = $bCrumb;
 		}

@@ -17,6 +17,20 @@ if (typeof jQuery === 'undefined') {
 	});
 })(jQuery);
 
+/** 在当前节点附近寻找对象，第一次找到对象后停止。 */
+(function($, undefined) {
+	$.fn.extend({
+	around: function(selector) {
+		var $parent = $(this);
+		while($parent.length>0 && $parent.find(selector).length==0)
+		{
+			$parent = $parent.parent();
+		}
+		return $parent.find(selector);
+	}
+	});
+})(jQuery);
+
 
 /** 重新注册对应的组件行为（比如一些特殊的下拉框、地图组件，上传图片的组件之类的。 */
 function haoPageInit(target)
@@ -30,8 +44,41 @@ function haoPageInit(target)
 	// },1000);
 	// document.getElementsByTagName('title')[0].innerHTML = $('#main_content .breadcrumb li.active a').html();
 
+	//三级地区联动
+	$target.find('select.select_chosen[name=area_third]').bind('chosen:showing_dropdown',function(e,cObj){
+		$(':focus').blur();
+		if ($(this).around('select.select_chosen[name=area_second]').val()=='')
+		{
+			$(this).attr('disabled',true).trigger('chosen:updated');
+		}
+	}).trigger('chosen:showing_dropdown');
+	$target.find('select.select_chosen[name=area_second]').change(function(){
+		var $nextObj = $(this).around('select.select_chosen[name=area_third]');
+		$nextObj.find('[value=""]').attr('selected', 'selected').siblings().remove()
+		$nextObj.removeAttr('disabled').trigger('change').trigger('chosen:updated');
+		setTimeout(function(){
+			$nextObj.trigger('chosen:open');
+		},100);
+	}).bind('chosen:showing_dropdown',function(e,cObj){
+		$(':focus').blur();
+		if ($(this).around('select.select_chosen[name=area_main]').val()=='')
+		{
+			$(this).attr('disabled',true).trigger('chosen:updated');
+		}
+	}).trigger('chosen:showing_dropdown');
+	$target.find('select.select_chosen[name=area_main]').change(function(){
+		var $nextObj = $(this).around('select.select_chosen[name=area_second]');
+		$nextObj.find('[value=""]').attr('selected', 'selected').siblings().remove()
+		$nextObj.removeAttr('disabled').trigger('change').trigger('chosen:updated');
+		setTimeout(function(){
+			$nextObj.trigger('chosen:open');
+		},100);
+	}).bind('chosen:showing_dropdown',function(e,cObj){
+		$(':focus').blur();
+	});
+
 	//使用HaoAdmin.detail()方法来处理/edit/标签
-	$target.find('a[href^="/edit/"]').click(function(e){
+	$target.find('a[href^="/edit/"][ispjax!="false"]').click(function(e){
 		HaoAdmin.detail(this);
 		return false;
 	});
