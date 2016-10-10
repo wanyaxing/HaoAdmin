@@ -290,11 +290,12 @@ function pjax(options) {
       timeout: options.timeout
     }
 
-    if (options.push) {//axing edit
-      window.history.pushState(pjax.state, container.title, container.url)
-    }
-    else if (options.replace) {
+
+    if (options.replace) {//axing edit
       window.history.replaceState(pjax.state, container.title, container.url)
+    }
+    else if (options.push) {//axing edit
+      window.history.pushState(pjax.state, container.title, container.url)
     }
 
     // Only blur the focus if the focused element is within the container.
@@ -314,6 +315,8 @@ function pjax(options) {
       previousState: previousState
     })
     context.html(container.contents)
+
+    context.attr('cache-control',xhr.getResponseHeader('cache-control'));//axing add
 
 
     // FF bug: Won't autofocus fields that are inserted via JS.
@@ -366,7 +369,7 @@ function pjax(options) {
   var xhr = pjax.xhr = $.ajax(options)
 
   if (xhr.readyState > 0) {
-    if (options.push && !options.replace) {
+    if (options.push && !options.replace && context.attr('cache-control') && context.attr('cache-control').indexOf('no-store')<0 ) {//axing edit 只有有缓存策略的，才会缓存
       // Cache current container element before replacing it
       cachePush(pjax.state.id, cloneContents(context))
 
@@ -462,7 +465,7 @@ function onPjaxPopstate(event) {
       });
       container.trigger(popstateEvent);
 
-      if (previousState) {
+      if (previousState && container.attr('cache-control') && container.attr('cache-control').indexOf('no-store')<0) {//axing edit 只有缓存策略通过的才能那啥
         // Cache current container before replacement and inform the
         // cache which direction the history shifted.
         cachePop(direction, previousState.id, cloneContents(container))
