@@ -24,17 +24,26 @@ if (isset($_POST[$fieldName])) {
 } else {
     $source = $_GET[$fieldName];
 }
+if (!isset($CONFIG['filePathOfHaoConnect']) || !file_exists($CONFIG['filePathOfHaoConnect']))
+{
+    return '{"state":"NO LIB OF HAOCONNECT FOUND"}';
+}
+include $CONFIG['filePathOfHaoConnect'];
 foreach ($source as $imgUrl) {
-    $item = new Uploader($imgUrl, $config, "remote");
-    $info = $item->getFileInfo();
-    array_push($list, array(
-        "state" => $info["state"],
-        "url" => $info["url"],
-        "size" => $info["size"],
-        "title" => htmlspecialchars($info["title"]),
-        "original" => htmlspecialchars($info["original"]),
-        "source" => htmlspecialchars($imgUrl)
-    ));
+    // $item = new Uploader($imgUrl, $config, "remote");
+    // $info = $item->getFileInfo();
+    $qiniuResult = QiniuConnect::requestFetchUrlToQiniu(array('url'=>$imgUrl));
+    if ($qiniuResult->isResultsOK())
+    {
+        array_push($list, array(
+            "state" => 'SUCCESS',
+            "url" => $qiniuResult->results(),
+            "size" => 999,
+            "title" => htmlspecialchars('catcherFile'),
+            "original" => htmlspecialchars('catcherFile'),
+            "source" => htmlspecialchars($imgUrl)
+        ));
+    }
 }
 
 /* 返回抓取数据 */
