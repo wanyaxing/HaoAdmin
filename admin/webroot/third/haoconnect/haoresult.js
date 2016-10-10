@@ -95,7 +95,14 @@ HaoResult = (function()
         }
         else if (typeof(value) == 'object')
         {
-            return new HaoResult(value, this.errorCode, this.errorStr, this.extraInfo);
+            if (value.modelType)
+            {
+                return new HaoResult(value, this.errorCode, this.errorStr, this.extraInfo);
+            }
+            else
+            {
+                return value;
+            }
         }
         return value;
     }
