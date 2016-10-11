@@ -32,7 +32,7 @@ include $CONFIG['filePathOfHaoConnect'];
 foreach ($source as $imgUrl) {
     // $item = new Uploader($imgUrl, $config, "remote");
     // $info = $item->getFileInfo();
-    $qiniuResult = QiniuConnect::requestFetchUrlToQiniu(array('url'=>$imgUrl));
+    $qiniuResult = HaoConnect::post('qiniu/fetch_url_to_qiniu',array('url'=>$imgUrl));
     if ($qiniuResult->isResultsOK())
     {
         array_push($list, array(
