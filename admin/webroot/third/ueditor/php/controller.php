@@ -6,8 +6,6 @@ error_reporting(E_ERROR);
 header("Content-Type: text/html; charset=utf-8");
 
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
-//axing add
-$CONFIG['filePathOfHaoConnect'] = $_SERVER['DOCUMENT_ROOT'].'/../lib/HaoConnect/HaoConnect.php'; //此处默认HaoConnect库所在/lib/处于/webroot/同级目录。
 
 
 $action = $_GET['action'];

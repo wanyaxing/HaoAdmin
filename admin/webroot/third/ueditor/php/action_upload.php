@@ -52,21 +52,6 @@ $up = new Uploader($fieldName, $config, $base64);
 
 //axing add
 $fileInfo = $up->getFileInfo();
-if ($fileInfo['state'] == 'SUCCESS')
-{
-    if (!isset($CONFIG['filePathOfHaoConnect']) || !file_exists($CONFIG['filePathOfHaoConnect']))
-    {
-        return '{"state":"NO LIB OF HAOCONNECT FOUND"}';
-    }
-    include $CONFIG['filePathOfHaoConnect'];
-
-    $result = QiniuConnect::requestUploadFileToQiniu('../../'.$fileInfo['url']);
-    if ($result->isResultsOK())
-    {
-        $fileInfo['url'] = $result->find('results>');
-    }
-}
-
 
 /**
  * 得到上传文件所对应的各个参数,数组结构

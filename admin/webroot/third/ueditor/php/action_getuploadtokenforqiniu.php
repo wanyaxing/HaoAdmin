@@ -5,13 +5,8 @@
  * Date: 15-04-06
  * Time: 下午6:37
  */
+include $_SERVER['DOCUMENT_ROOT'].'/../lib/HaoConnect/HaoConnect.php'; //此处默认HaoConnect库所在/lib/处于/webroot/同级目录。
 
-if (!isset($CONFIG['filePathOfHaoConnect']) || !file_exists($CONFIG['filePathOfHaoConnect']))
-{
-    return '{"errorCode":1,"errorStr":"no lib of HaoConnect FOUND","extraInfo":null,"resultCount":1,"results":null,"timeCost":"0.01036","timeNow":"2016-04-06 18:40:10","modelType":"HaoResult"}';
-}
-
-include $CONFIG['filePathOfHaoConnect'];
 $result = QiniuConnect::requestGetUploadTokenForQiniu($_REQUEST);
 return json_encode($result->properties());
 
