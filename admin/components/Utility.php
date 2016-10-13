@@ -561,30 +561,35 @@ class Utility
         return '错误的使用方法，请检查调用strOfChosenWithZipArea的相关代码';
     }
 
-    /** 智能设定面包屑 */
+    /** 智能设定页面配置 */
     public static function breadCrumb($bCrumb)
     {
         if (!isset($bCrumb['parent']) || $bCrumb['parent']=='')
         {
             $bCrumb['parent'] = $bCrumb['name'];
         }
-        if (!isset($GLOBALS['breadCrumb']))
+        if (isset($GLOBALS['IS_SIDE_TREE']) && $GLOBALS['IS_SIDE_TREE'])
         {
-            if (isset($GLOBALS['IS_SIDE_TREE']) && $GLOBALS['IS_SIDE_TREE'])
+            if (!$bCrumb['isAuthed'] || (isset($bCrumb['isHidden']) && $bCrumb['isHidden']==true))
             {
-                if (!$bCrumb['isAuthed'] || (isset($bCrumb['isHidden']) && $bCrumb['isHidden']==true))
-                {
-                    ;
-                }
-                else
-                {
-                    $GLOBALS['SIDE_TREE'][$bCrumb['parent']][] = $bCrumb;
-                }
-                return false;
-			}
-			$GLOBALS['breadCrumb'] = $bCrumb;
-		}
-		return true;
+                ;
+            }
+            else
+            {
+                $GLOBALS['SIDE_TREE'][$bCrumb['parent']][] = $bCrumb;
+            }
+            return false;
+        }
+        else if (!isset($GLOBALS['breadCrumb']))
+        {
+            if (!$bCrumb['isAuthed'])
+            {
+                echo '您无权查看此页面';
+                exit;
+            }
+            $GLOBALS['breadCrumb'] = $bCrumb;
+        }
+        return true;
     }
 
     /**
