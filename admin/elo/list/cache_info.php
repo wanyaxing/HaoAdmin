@@ -175,6 +175,7 @@
 			return isset($keyList[$key])?$keyList[$key]:'';
 		}
 	}
+    $PAGE_TITLE = $breadCrumb['name'];
 
 ?>
 

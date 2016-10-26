@@ -39,7 +39,9 @@
         $requestResult = HaoResult::instanceModel($_REQUEST);
     }
 
-
+    // $PAGE_TITLE = '编辑';
+    // $PAGE_DESCRIPTION = '';
+    // $PAGE_ICON = '';
 /**
  * 下面是输出表单并设定各单元初始值
  * 以下是使用ajax_haoconnect.php进行数据处理的默认方案，供参考。

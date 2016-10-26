@@ -46,6 +46,10 @@
  */
     $requestResult = Utility::requestBreadCrumb($params);
 
+    $PAGE_TITLE = $breadCrumb['name'];
+    // $PAGE_DESCRIPTION = '';
+    // $PAGE_ICON = '';
+
 ?>
 <!-- 面包屑导航 -->
 <?= Utility::strOfBreadCrumb($breadCrumb) ?>
