@@ -95,36 +95,27 @@ define("AX_TIMER_START", microtime (true));//记录请求开始时间
     register_shutdown_function('catch_fatal_error');
 
     $requestPath = preg_replace ("/(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/", '', $_SERVER['REQUEST_URI']);
+    $requestPath = preg_replace('/\/+/','/',$requestPath);
+
     if ($requestPath=='' || $requestPath == '/' )
     {
         $requestPath = '/other/welcome';
+
     }
 
     header('X-PJAX-URL:'.W2Web::getCurrentUrl());
 
     $currentUserResult = Utility::getCurrentUserResult();
 
+    //路径中的/other/可以自动补上。
+    if (!file_exists(AXAPI_ELO_PATH. $requestPath.'.php'))
+    {
+        $requestPath = '/other/'.$requestPath;
+    }
+
     if (file_exists(AXAPI_ELO_PATH. $requestPath.'.php'))
     {
-        if ( strpos($requestPath,'/edit/')===0 || strpos($requestPath,'/list/')===0 || strpos($requestPath,'/other/')===0 )
-        {
-            if (Utility::getHeaderValue('X-Requested-With') == 'XMLHttpRequest')
-            {
-                include AXAPI_ELO_PATH .$requestPath.'.php';
-            }
-            else if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE ') !==false && (strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 6.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 7.")  || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 8.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 9.")))
-            {
-                include AXAPI_ELO_PATH . '/ie_no_more.php' ;
-            }
-            else
-            {
-                include AXAPI_ELO_PATH . '/home.php' ;
-            }
-        }
-        else
-        {
-            include AXAPI_ELO_PATH. $requestPath.'.php';
-        }
+        include AXAPI_ELO_PATH . '/home.php' ;
     }
     else
     {

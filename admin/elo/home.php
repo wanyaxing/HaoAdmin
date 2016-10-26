@@ -3,6 +3,44 @@
     {
         $requestPath='/welcome';
     }
+    if (W2HttpRequest::getRequestInt('sharer')<=0)
+    {
+        $_REQUEST['sharer'] = $currentUserResult->find('id');
+        header('location:'.'http://' .  $_SERVER['HTTP_HOST'] . $requestPath . '?'. http_build_query($_REQUEST));
+        exit;
+    }
+
+    if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE ') !==false && (strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 6.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 7.")  || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 8.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 9.")))
+    {
+        include AXAPI_ELO_PATH . '/ie_no_more.php' ;
+        exit;
+    }
+
+    //获得正文内容
+    ob_start();
+    include AXAPI_ELO_PATH.$requestPath.'.php';
+    $main_content = ob_get_clean();
+
+    //配置标题等参数
+    if (!isset($PAGE_TITLE))                                { $PAGE_TITLE       = AXAPI_PROJECT_TITLE;                    }
+    if (!isset($PAGE_KEYWORDS)    || $PAGE_KEYWORDS=='' )   { $PAGE_KEYWORDS    = $PAGE_TITLE;                    }
+    if (!isset($PAGE_DESCRIPTION) || $PAGE_DESCRIPTION=='' ){ $PAGE_DESCRIPTION = $PAGE_TITLE;                    }
+    if (!isset($PAGE_ICON))                                 { $PAGE_ICON        = W2Web::getCurrentHost().'/images/logo.png'; }
+    $main_content = preg_replace('/(<\w+)/',sprintf('$1 page_title="%s" page_keywords="%s" page_description="%s" page_icon="%s"',$PAGE_TITLE,$PAGE_KEYWORDS,$PAGE_DESCRIPTION,$PAGE_ICON),$main_content,1);
+
+    //ajax请求 或 根目录文件 只输出正文
+    if (Utility::getHeaderValue('X-Requested-With') == 'XMLHttpRequest' || preg_match('/^\/[^\/]+$/', $requestPath))
+    {
+        echo $main_content;
+        exit;
+    }
+
+    //获得侧边栏数据
+    ob_start();
+    include AXAPI_ELO_PATH.'/side.php';
+    $side_content = ob_get_clean();
+
+//开始组装完整正文
 ?>
 <?php include AXAPI_ELO_PATH.'/header.php'; ?>
 <?php if (!is_object($currentUserResult)): ?>
@@ -48,12 +86,10 @@
       </div>
       <div class="row">
         <div id="side_div" class="col-md-3">
-          <div id="side_content" class="panel-group nav" role="tablist">
-            <?php include AXAPI_ELO_PATH.'/side.php'; ?>
-          </div>
+        <div id="side_content" class="panel-group nav" role="tablist"><?= $side_content?></div>
         </div>
         <div class="col-md-9">
-          <div id="main_content"><?php include AXAPI_ELO_PATH.$requestPath.'.php'; ?></div>
+            <div id="main_content"><?= $main_content ?></div>
         </div>
       </div>
   </div>
