@@ -39,6 +39,27 @@ function haoPageInit(target)
 	if (!target){target='body';}
 	var $target = $(target);
 
+    //更新标题
+    if ($target.children().eq(0).attr('page_title'))
+    {
+        var pageObj = $target.children().eq(0);
+        $('title').html(pageObj.attr('page_title'));
+        $('meta[name=keywords]').attr('content',pageObj.attr('page_keywords'));
+        $('meta[name=description]').attr('content',pageObj.attr('page_description'));
+        $('link[rel=apple-touch-icon]').attr('href',pageObj.attr('page_icon'));
+        //此处hack苹果微信中的bug  :  http://www.jianshu.com/p/217b0e3bd337
+        if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent))
+        {
+            $('<iframe src="/favicon.ico" width=1 height=1 border=0 style="display:none;"></iframe>').on('load',function() {
+                var that = this;
+                  setTimeout(function() {
+                      $(that).off('load').remove();
+                  }, 0);
+                }).appendTo($('body'));
+        }
+    }
+
+
 	// setTimeout(function(){
 		// $('title').html($('#main_content .breadcrumb li.active a').html());
 	// },1000);
@@ -76,6 +97,23 @@ function haoPageInit(target)
 	}).bind('chosen:showing_dropdown',function(e,cObj){
 		$(':focus').blur();
 	});
+
+    // 动态展示侧边栏
+    if ($('#main_content').children().eq(0).attr('isHiddenSideBar') == 'true')// && (!window.history || window.history.length>1)
+    {
+        $('#side_content').hide();
+        // $('body').css('padding-bottom','0px');
+        // if ($target.find('.side_button').length>0)
+        // {
+        //     $('body').css('padding-bottom',$target.find('.side_button').height()+'px');
+        // }
+    }
+    else
+    {
+        $('#side_content').show();
+        // $('body').css('padding-bottom','150px');
+    }
+
 
 	//使用HaoAdmin.detail()方法来处理/edit/标签
 	$target.find('a[href^="/edit/"][ispjax!="false"]').click(function(e){
@@ -136,6 +174,7 @@ function haoPageInit(target)
 			.script('/third/haouploader/js/webuploader/webuploader.min.js')
 			.script('/third/haouploader/js/webuploader-haoplus.js')
 			.script('/third/haouploader/js/sortable/Sortable.js')
+            .script('/third/haouploader/js/lrz/lrz.bundle.js')
 			.script('/third/haouploader/js/haouploader.js')
 			.wait(function(){
 			        HaoUploader.init(that);
@@ -163,10 +202,13 @@ function haoPageInit(target)
     	var that = this;
 		$LAB
 			.script('http://webapi.amap.com/maps?v=1.3&key='+AMAP_WEBAPI_KEY+'&plugin=AMap.PlaceSearch')
-			.script('/third/haoamap.js')
 			.wait(function(){
-			        HaoAmap.init(that);
-			    });
+				$LAB
+					.script('/third/haoamap.js')
+					.wait(function(){
+					        HaoAmap.init(that);
+					    });
+			});
 		});
 
 	// checkbox转开关
@@ -279,9 +321,10 @@ function chosen_ready(e,cObj)
 						var isNewFound = false;
 						for (var i in names)
 						{
-							if (optionObj.val() == values[i])
+                            if (optionObj.val() == values[i] || optionObj.html()==names[i] )
 							{
-								optionObj.html(names[i])
+                                optionObj.html(names[i]);
+                                optionObj.val(values[i]);
 								chosen.form_field_jq.trigger('chosen:updated');
 								break;
 							}
@@ -310,7 +353,8 @@ function chosen_winnow_results(e,cObj)
 			{
 
 				ajaxUrl = ajaxUrl.replace(/(\{)(.*?)(\})/g,function($0,$1,selector,$3){
-					return chosen.form_field_jq.closest('form').find(selector).val();
+                    var value = chosen.form_field_jq.around(selector).val();
+                    return value;
 				});
 			}
 			if (ajaxUrl.substr(-1,1)=='=')
@@ -364,6 +408,7 @@ function chosen_winnow_results(e,cObj)
 							var optionObj = chosen.form_field_jq.find('[value='+value+']');
 							if (optionObj.length == 0)
 							{
+								if (name == null){name = ""+value;}
 								if (name.indexOf(searchText)<0)
 								{
 									name = name + ' ('+searchText+')';
@@ -424,7 +469,7 @@ $(function(){
 		$(this).addClass('list-group-item-warning').blur();
 	});
 	$.pjax.defaults.timeout = 30000;
-	$(document).pjax('a[href^="/edit/"],a[href^="/list/"],a[href^="/other/"],a[href^="?"]','#main_content');
+    $(document).pjax('a[href^="/"][ispjax!="false"],a[href^="?"][ispjax!="false"]','#main_content');
 	$(document).on('submit', 'form[data-pjax]', function(event) {
 		event.preventDefault(); // stop default submit behavior
 		$.pjax.submit(event, '#main_content');
@@ -433,11 +478,11 @@ $(function(){
 	$(document).on('pjax:click , submit , pjax:beforePopstate', function() {
 		haoPageOutIt('#main_content');
 	});
-	$(document).on('pjax:complete , pjax:popstate', function(event,xhr, textStatus, options) {
-		setTimeout(function(){
-			haoPageInit('#main_content');
-		},100);
-	});
+    $(document).on('pjax:end', function(event,xhr, textStatus, options) {
+        setTimeout(function(){
+            haoPageInit('#main_content');
+        },100);
+    });
 
 	$(document).on('pjax:error', function(xhr, textStatus, error, options) {
 	  	console.log(xhr, textStatus, error, options);
@@ -460,7 +505,7 @@ $(function(){
 									$('#side_content .list-group-item-warning').removeClass('list-group-item-warning');
 									var requestUrl = options.requestUrl?options.requestUrl:options.url;
 									requestUrl = requestUrl.replace(/^http:\/\/.*?(\/.*?)(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/g,'$1');
-									var sideAObj = $('#side_content [href="'+requestUrl+'"]');
+                                    var sideAObj = $('#side_content [href^="'+requestUrl+'"]');
 									if (sideAObj.closest('.list-group').css('display')=='none')
 									{
 										sideAObj.closest('.list-group').show();
@@ -472,7 +517,7 @@ $(function(){
 									}
 									else
 									{
-										NProgress.configure({ parent:'#home_navcontainer' , direction:(options['direction'] && options['direction']=='back')?'leftToRightReduced':'leftToRightIncreased' });
+                                        NProgress.configure({ parent:'body' , direction:(options['direction'] && options['direction']=='back')?'leftToRightReduced':'leftToRightIncreased' });
 									}
 									NProgress.start();
 								});
@@ -485,6 +530,12 @@ $(function(){
 								});
 });
 
+/** pjax请求的时候，关闭所有弹出窗口 */
+$(function(){
+    $(document).on('pjax:start', function(e,xhr, options) {
+                                    HaoAdmin.closeAllJc();
+                                });
+});
 /** 页面载入后，初始化对应组件。（该方法在ajax后也应该调用哦） */
 $(function(){
 
@@ -500,6 +551,11 @@ $(function(){
         zIndex: 10000,
         textIndent: 20
     };
+
+    $.extend(jconfirm.pluginDefaults,{
+        confirmButton: '确定',
+        cancelButton: '取消',
+    });
 
 	haoPageInit('body');
 
