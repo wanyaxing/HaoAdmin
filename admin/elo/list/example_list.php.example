@@ -73,6 +73,7 @@
             <th>邮箱</th>
             <th>地址</th>
             <?= Utility::getThWithOrder('创建时间','create_time')?>
+            <th>操作</th>
         </thead>
         <!-- 内容（逐列处理） -->
         <tbody>
@@ -84,6 +85,17 @@
                 <td><?= $detailResult->find('email') ?></td>
                 <td><?= $detailResult->find('address')  ?></td>
                 <td><?= $detailResult->find('createTime')  ?></td>
+                <td>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        查看 <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="/list/orderdetail_list?user_id=<?= $detailResult->find('id') ?>">查看订单</a></li>
+                        <li><a href="/list/user_list?referrer_user_id=<?= $detailResult->find('id') ?>">TA的客户</a></li>
+                      </ul>
+                    </div>
+                </td>
             </tr>
             <?php endforeach ?>
         </tbody>

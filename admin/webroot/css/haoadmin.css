@@ -62,6 +62,11 @@ table thead .sortable a{
     display: block;
 }
 
+.dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
 /*面包屑 当前链接改色*/
 .breadcrumb .active a{
     color: black;
