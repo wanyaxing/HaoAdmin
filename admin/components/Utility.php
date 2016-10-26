@@ -509,7 +509,7 @@ class Utility
         return $s;
     }
     /** 根据提供的键值对，创建标签类型的options字符串。用户可以手动增加标签。 （默认多选）*/
-    public static function strOfChosenWithTags($name,$selectValues=null,$options=null,$strAttrs=' multiple')
+    public static function strOfChosenWithTags($name,$selectValues=null,$options=array(),$strAttrs=' multiple ')
     {
         $strAttrs .=  'search-type="tags" ';
         if (!W2Array::isList($options))
