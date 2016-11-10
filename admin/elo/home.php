@@ -3,12 +3,6 @@
     {
         $requestPath='/welcome';
     }
-    if (W2HttpRequest::getRequestInt('sharer')<=0)
-    {
-        $_REQUEST['sharer'] = $currentUserResult->find('id');
-        header('location:'.'http://' .  $_SERVER['HTTP_HOST'] . $requestPath . '?'. http_build_query($_REQUEST));
-        exit;
-    }
 
     if (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE ') !==false && (strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 6.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 7.")  || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 8.") || strpos($_SERVER["HTTP_USER_AGENT"],"MSIE 9.")))
     {
