@@ -95,7 +95,7 @@ HaoResult = (function()
         }
         else if (typeof(value) == 'object')
         {
-            if (value.modelType)
+            if (value!=null && value.modelType)
             {
                 return new HaoResult(value, this.errorCode, this.errorStr, this.extraInfo);
             }
@@ -224,6 +224,12 @@ HaoResult = (function()
         	result.push(_this.find($2));
         });
         return result;
+    }
+
+    /**  将属性results进行转化后输出。 通常用于列表页结果，可以用该方法一次性获得N个HaoResult组成的数组。 */
+    HaoResult.prototype.results = function()
+    {
+        return this.find('results>');
     }
 
     /** 判断当前实例是否目标model */
