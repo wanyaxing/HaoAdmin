@@ -161,10 +161,7 @@ function haoPageInit(target)
 							'chosen:ready':chosen_ready
 							,'chosen:winnow_results':chosen_winnow_results
 							})
-						.chosen({
-							 allow_single_deselect: true
-							,search_contains:true
-							});
+                        .chosen( $.extend({},$(that).attr(),{allow_single_deselect: true,search_contains:true}) );
 				});
 		})
 	// 七牛上传
