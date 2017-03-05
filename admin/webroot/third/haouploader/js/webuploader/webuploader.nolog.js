@@ -1182,7 +1182,7 @@
                 return;
             }
     
-            RuntimeClent.call( this, 'DragAndDrop' );
+            RuntimeClent.call( this, 'DragAndDrop', true );
         }
     
         DragAndDrop.options = {
@@ -1207,6 +1207,7 @@
     
         return DragAndDrop;
     });
+    
     /**
      * @fileOverview 组件基类。
      */
@@ -2348,7 +2349,8 @@
                         size = file.size;
     
                         // 如果压缩后，比原来还大则不用压缩后的。
-                        if ( !noCompressIfLarger || blob.size < size ) {
+                        // 如果压缩失败（size == 0 )，也别用。
+                        if (blob.size>0 && ( !noCompressIfLarger || blob.size < size )) {
                             // file.source.destroy && file.source.destroy();
                             file.source = blob;
                             file.size = blob.size;
@@ -2373,6 +2375,7 @@
             }
         });
     });
+    
     /**
      * @fileOverview 文件属性封装
      */
@@ -2737,6 +2740,8 @@
                         me._onFileStatusChange( cur, pre );
                     });
                 }
+    
+                file.setStatus( STATUS.QUEUED );
             },
     
             _onFileStatusChange: function( curStatus, preStatus ) {
@@ -2802,6 +2807,7 @@
     
         return Queue;
     });
+    
     /**
      * @fileOverview 队列
      */
@@ -2944,13 +2950,13 @@
              * @description 当一批文件添加进队列以后触发。
              * @for  Uploader
              */
-            
+    
             /**
              * @property {Boolean} [auto=false]
              * @namespace options
              * @for Uploader
              * @description 设置为 true 后，不需要手动调用上传，有文件选择即开始上传。
-             * 
+             *
              */
     
             /**
@@ -2972,6 +2978,7 @@
                     return me._addFile( file );
                 });
     			
+    
     			if ( files.length ) {
     
                     me.owner.trigger( 'filesQueued', files );
@@ -3014,6 +3021,10 @@
                 var me = this;
     
                 file = file.id ? file : me.queue.getFile( file );
+    
+                if( !me.queue.getFile( file.id ) ) {
+                    return false;
+                }
     
                 this.request( 'cancel-file', file );
     
@@ -3111,6 +3122,7 @@
         });
     
     });
+    
     /**
      * @fileOverview 添加获取Runtime相关信息的方法。
      */
@@ -3539,6 +3551,7 @@
                 }
     
                 if ( me.runing ) {
+                    me.owner.trigger('startUpload', file);// 开始上传或暂停恢复的，trigger event
                     return Base.nextTick( me.__tick );
                 }
     
@@ -3587,8 +3600,7 @@
              * @for  Uploader
              */
             stopUpload: function( file, interrupt ) {
-                var me = this,
-                    block;
+                var me = this;
     
                 if (file === true) {
                     interrupt = file;
@@ -3613,19 +3625,18 @@
     
                     $.each( me.pool, function( _, v ) {
     
-                        // 只 abort 指定的文件。
+                        // 只 abort 指定的文件，每一个分片。
                         if (v.file === file) {
-                            block = v;
-                            return false;
+                            v.transport && v.transport.abort();
+    
+                            if (interrupt) {
+                                me._putback(v);
+                                me._popBlock(v);
+                            }
                         }
                     });
     
-                    block.transport && block.transport.abort();
-    
-                    if (interrupt) {
-                        me._putback(block);
-                        me._popBlock(block);
-                    }
+                    me.owner.trigger('stopUpload', file);// 暂停，trigger event
     
                     return Base.nextTick( me.__tick );
                 }
@@ -6904,11 +6915,11 @@
                         return me.trigger('load');
                     } else if ( xhr.status >= 500 && xhr.status < 600 ) {
                         me._response = xhr.responseText;
-                        return me.trigger( 'error', 'server' );
+                        return me.trigger( 'error', 'server-'+status );
                     }
     
     
-                    return me.trigger( 'error', me._status ? 'http' : 'abort' );
+                    return me.trigger( 'error', me._status ? 'http-'+status : 'abort' );
                 };
     
                 me._xhr = xhr;
@@ -6934,6 +6945,7 @@
             }
         });
     });
+    
     /**
      * @fileOverview  Transport flash实现
      */
@@ -7912,9 +7924,9 @@
                         readBody = true;
                     } else if ( status >= 500 && status < 600 ) {
                         readBody = true;
-                        err = 'server';
+                        err = 'server-'+status;
                     } else {
-                        err = 'http';
+                        err = 'http-'+status;
                     }
     
                     if ( readBody ) {
@@ -7949,9 +7961,10 @@
                 });
     
                 xhr.on( 'error', function() {
+                    var status = xhr.exec('getStatus'),err = status?'http-'+status:'http';
                     xhr.off();
                     me._xhr = null;
-                    me.trigger( 'error', 'http' );
+                    me.trigger( 'error', err );
                 });
     
                 me._xhr = xhr;
