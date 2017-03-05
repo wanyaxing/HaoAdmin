@@ -45,12 +45,12 @@ var HaoUploader = {
     }
     ,initUploader: function (inputObj)
     {
+        var image_max = inputObj.attr('max')?parseInt(inputObj.attr('max')):0;
         var dndObj = $('<span class="dnd_which_upload_to_qiniu"></span>')
                         .css({'display':'inline-block'})
                         .insertAfter(inputObj)
                         .attr('tabindex','0')
                         .attr('multiple',inputObj.attr('multiple'))
-                        .attr('max',inputObj.attr('max'))
                         ;
         inputObj.appendTo(dndObj);
         var targetObj = $('<li class="pick_which_upload_to_qiniu">&nbsp;</li>').css({'position':'relative'}).insertAfter(inputObj);
@@ -83,7 +83,7 @@ var HaoUploader = {
             pick: {id:targetObj[0],'multiple':inputObj.attr('multiple')?true:false},
 
             //验证文件总数量, 超出则不允许加入队列。
-            fileNumLimit:inputObj.attr('multiple')?(inputObj.attr('max')?parseInt(inputObj.attr('max')):undefined):1,
+            fileNumLimit:inputObj.attr('multiple')?(image_max>0?image_max:undefined):1,
             // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
             disableGlobalDnd: true,
 
@@ -122,18 +122,22 @@ var HaoUploader = {
 
         uploader.updateStatueOfPick = function()
         {
+            console.log(uploader.predictRuntimeType());
             $pick = $(uploader.options.pick.id);
-            if ($(dndObj).attr('multiple') && $(dndObj).attr('max'))
+            if ($(dndObj).attr('multiple') && image_max>0)
             {
-                if ($(dndObj).find('.filePreview').length>=parseInt($(dndObj).attr('max')))
+                if ($(dndObj).find('.filePreview').length>=image_max)
                 {
                     uploader.options.fileNumLimit = 0;
-                    $pick.hide();
+                    if (uploader.predictRuntimeType()!='flash')
+                    {
+                        $pick.hide();
+                    }
                 }
                 else
                 {
-                    uploader.options.fileNumLimit = parseInt($(dndObj).attr('max')) - $(dndObj).find('.filePreview').length;
-                    $pick.appendTo($pick.parent()).show();
+                    uploader.options.fileNumLimit = image_max - $(dndObj).find('.filePreview').length;
+                    $pick.show();
                 }
             }
         }
@@ -258,14 +262,6 @@ var HaoUploader = {
                     }
                 });
                 $li.insertBefore( uploader.options.pick.id );
-                Sortable.create(dndObj[0],{
-                                                    draggable:'.filePreview',
-                                                    animation: 150,
-                                                    onSort: function (evt) {
-                                                            uploader.updateInputValueOfInDND();
-                                                        }
-                                                }
-                                            );
                 uploader.updateStatueOfPick();
             }
         }
@@ -273,9 +269,9 @@ var HaoUploader = {
         uploader.on('beforeFileQueued', function( file ){
             console.log('beforeFileQueued');
             console.log(file);
-            if ($(dndObj).attr('multiple') && $(dndObj).attr('max') && $(dndObj).find('.filePreview').length>=parseInt($(dndObj).attr('max')))
+            if ($(dndObj).attr('multiple') && image_max>0 && $(dndObj).find('.filePreview').length>=image_max)
             {
-                console.log('达到max值，忽略当前文件。');
+                alert('文件数量已到限制，更多文件将被忽略。');
                 return false;
             }
             if (!file.previewObj)
@@ -314,6 +310,16 @@ var HaoUploader = {
         });
 
         uploader.updateDNDOfInputValue();
+
+        Sortable.create(dndObj[0], {
+                                        draggable:'.filePreview',
+                                        animation: 150,
+                                        onSort: function (evt) {
+                                                $(evt.item).siblings('.pick_which_upload_to_qiniu').appendTo($(evt.item).parent());
+                                                uploader.updateInputValueOfInDND();
+                                            }
+                                    }
+                                );
 
         return uploader;
     }
