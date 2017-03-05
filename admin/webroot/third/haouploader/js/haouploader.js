@@ -105,6 +105,7 @@ var HaoUploader = {
         uploader.updateInputValueOfInDND = function()
         {
             $(dndObj).find(inputObj).val($(dndObj).find('[url_preview]').map(function(){return $(this).attr('url_preview');}).get().join(',')).trigger('change');
+            uploader.updateStatueOfPick();
         }
 
         uploader.updateDNDOfInputValue = function()
@@ -116,6 +117,25 @@ var HaoUploader = {
                     uploader.newPreviewObjOfFile(null,imgSrc);
                 }
             });
+            uploader.updateStatueOfPick();
+        }
+
+        uploader.updateStatueOfPick = function()
+        {
+            $pick = $(uploader.options.pick.id);
+            if ($(dndObj).attr('multiple') && $(dndObj).attr('max'))
+            {
+                if ($(dndObj).find('.filePreview').length>=parseInt($(dndObj).attr('max')))
+                {
+                    uploader.options.fileNumLimit = 0;
+                    $pick.hide();
+                }
+                else
+                {
+                    uploader.options.fileNumLimit = parseInt($(dndObj).attr('max')) - $(dndObj).find('.filePreview').length;
+                    $pick.appendTo($pick.parent()).show();
+                }
+            }
         }
 
         uploader.newPreviewObjOfFile = function(file,imgUrl)
