@@ -42,7 +42,7 @@ WebUploader.Uploader.register({
         var uploader = this.owner;
     }
     ,'before-send-file': function(file){
-        console.log('before-send-file init',this);
+        // console.log('before-send-file init',this);
         var uploader = this.owner;
         uploader.option('server', 'http://upload.qiniu.com');
         uploader.option('fileVal', 'file');
@@ -52,11 +52,11 @@ WebUploader.Uploader.register({
         uploader.md5File(file.source)
             // 可以用来监听进度
             .progress(function(percentage) {
-                console.log('Percentage:', percentage);
+                // console.log('Percentage:', percentage);
             })
             // 处理完成后触发
             .then(function(ret) {
-                console.log(file);
+                // console.log(file);
                 file.md5 = ret;
                 $.ajax({
                    type: 'POST',
@@ -76,7 +76,7 @@ WebUploader.Uploader.register({
                             if (result['results']['isFileExistInQiniu'])
                             {
                                 file.ret = result['results'];
-                                console.log('秒传：',result['results']['urlPreview']);
+                                // console.log('秒传：',result['results']['urlPreview']);
                             }
                         }
                         else

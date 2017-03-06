@@ -122,7 +122,7 @@ var HaoUploader = {
 
         uploader.updateStatueOfPick = function()
         {
-            console.log(uploader.predictRuntimeType());
+            // console.log(uploader.predictRuntimeType());
             $pick = $(uploader.options.pick.id);
             if ($(dndObj).attr('multiple') && image_max>0)
             {
@@ -222,7 +222,7 @@ var HaoUploader = {
 
                     // 成功
                     if ( cur === 'error' || cur === 'invalid' ) {
-                        console.log( file.statusText );
+                        // console.log( file.statusText );
                         showError( file.statusText );
                     } else if ( cur === 'interrupt' ) {
                         showError( 'interrupt' );
@@ -267,8 +267,8 @@ var HaoUploader = {
         }
 
         uploader.on('beforeFileQueued', function( file ){
-            console.log('beforeFileQueued');
-            console.log(file);
+            // console.log('beforeFileQueued');
+            // console.log(file);
             if ($(dndObj).attr('multiple') && image_max>0 && $(dndObj).find('.filePreview').length>=image_max)
             {
                 alert('文件数量已到限制，更多文件将被忽略。');
@@ -283,10 +283,10 @@ var HaoUploader = {
 
         //此处需要自定义，根据json.urlPreview来决定更新对应结果。 by axing
         uploader.on('uploadSuccess', function( file , ret ){
-            console.log('uploadSuccess');
+            // console.log('uploadSuccess');
             var $li = $(file.previewObj);
             var json = (file.ret || ret );
-            console.log(file , ret,json);
+            // console.log(file , ret,json);
             if (json && json.urlPreview) {
                 $li.attr('url_preview',json.urlPreview);
                 $li.find('.progress').css({'opacity':'0'});
@@ -299,14 +299,14 @@ var HaoUploader = {
 
 
         uploader.on('uploadProgress', function(file,percentage){
-            console.log('uploadProgress');
-            console.log(file,percentage);
+            // console.log('uploadProgress');
+            // console.log(file,percentage);
             var $li = $(file.previewObj);
             $li.find('.progress').text( parseInt(percentage * 100) + '%' ).css('opacity',1-percentage);
         });
 
         uploader.on('error', function(type){
-            console.log(type);
+            // console.log(type);
         });
 
         uploader.updateDNDOfInputValue();
