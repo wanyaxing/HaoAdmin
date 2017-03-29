@@ -159,14 +159,14 @@ class Utility
 		$params = array_filter($params,function($val){
 			return $val!==null && $val!=='';
 		});
-		if (!isset($params['page_max']))
-		{
-			$params['iscountall'] = 1;
-		}
-		if (!isset($params['page']))
-		{
-			$params['page'] = 1;
-		}
+        if (!isset($params['page_max']) || $params['page'] == 1)
+        {
+            $params['iscountall'] = 1;
+        }
+        if (!isset($params['page']))
+        {
+            $params['page'] = 1;
+        }
 		if (isset($params['is_only_filter_with_request']) && $params['is_only_filter_with_request'])
 		{
 			// $params = $params;
@@ -545,17 +545,17 @@ class Utility
     }
 
     /** 根据提供的三级地区的值，创建ajax类型的options字符串。用户可以搜索关键字查找地区，也支持地区的三级联动。 */
-    public static function strOfChosenWithZipArea($name,$selectValues=null)
+    public static function strOfChosenWithZipArea($name,$selectValues=null,$strAttrs='')
     {
         switch ($name) {
             case 'area_main':
-                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=1&area_parent=0&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=1&area_parent=0&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues,null,$strAttrs);
                 break;
             case 'area_second':
-                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=2&area_parent={[name=area_main]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=2&area_parent={[name=area_main]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues,null,$strAttrs);
                 break;
             case 'area_third':
-                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=3&area_parent={[name=area_second]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues);
+                return static::strOfChosenWithAjax($name,'/ajax_haoconnect.php?url_param=zip_area/list&lvl=3&area_parent={[name=area_second]}&isreverse=0&size=99&keyword=','.*?\d>id','.*?\d>areaName',$selectValues,null,$strAttrs);
                 break;
         }
         return '错误的使用方法，请检查调用strOfChosenWithZipArea的相关代码';
@@ -622,7 +622,7 @@ class Utility
 			}
 		}
 
-		if (!isset($params['page_max']))
+        if (isset($params['iscountall']))
 		{
 			$params['page_max']    = $requestResult->find('extraInfo>pageMax',1);
 			if ( $params['page_max']<1 )
@@ -630,6 +630,7 @@ class Utility
 				$params['page_max']		= 1;
 			}
 			$params['count_total'] = $requestResult->find('extraInfo>countTotal',0);
+            unset($params['iscountall']);
 		}
 		return $requestResult;
     }
