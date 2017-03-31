@@ -171,7 +171,7 @@ function haoPageInit(target)
 	}
 	// 支持ajax的选择组件
 	$target
-		.find('select[search-type]').each(function(){
+		.find('.select_chosen').each(function(){
 			var that = this;
 			$LAB
 				.script('/third/chosen/chosen.jquery.js')
