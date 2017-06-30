@@ -161,6 +161,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-xs-2">服务开始日期</label>
+        <div class="col-xs-10">
+            <?= Utility::strOfDay('serve_start_day',$requestResult->find('serveStartDay')) ?>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-xs-2">头像</label>
         <div class="col-xs-10">
             <?= Utility::strOfPhoto('photo',$requestResult->find('photo')) ?>

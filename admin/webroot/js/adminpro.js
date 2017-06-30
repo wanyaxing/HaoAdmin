@@ -33,23 +33,38 @@ if (typeof jQuery === 'undefined') {
 
 /** 增强Jquery.attr方法 */
 (function(old) {
-  $.fn.attr = function() {
+    $.fn.attr = function() {
     if(arguments.length === 0) {
-      if(this.length === 0) {
+        if(this.length === 0) {
         return null;
-      }
-
-      var obj = {};
-      $.each(this[0].attributes, function() {
-        if(this.specified) {
-          obj[this.name] = this.value;
         }
-      });
-      return obj;
+
+        var obj = {};
+        $.each(this[0].attributes, function() {
+        if(this.specified) {
+            if (this.name == 'value')
+            {
+                obj[this.name] = this.value;
+            }
+            else if (this.value.match(/^\d+$/g))
+            {
+                obj[this.name] = parseInt(this.value);
+            }
+            else if (this.value.match(/^[\d\.]+/g))
+            {
+                obj[this.name] = parseFloat(this.value);
+            }
+            else
+            {
+                obj[this.name] = this.value;
+            }
+        }
+        });
+        return obj;
     }
 
     return old.apply(this, arguments);
-  };
+    };
 })($.fn.attr);
 
 /** 重新注册对应的组件行为（比如一些特殊的下拉框、地图组件，上传图片的组件之类的。 */
@@ -197,22 +212,18 @@ function haoPageInit(target)
 			        HaoUploader.init(that);
 			    });
 		});
+
     // 时间组件
     $target.find('input.datetimepicker').each(function(){
-    	var that = this;
-		$LAB
-			.script('/third/datetimepicker/jquery.datetimepicker.full.js')
-			.wait(function(){
-					$.datetimepicker.setLocale('zh');
-				    $(that).datetimepicker({
-						 // timepicker:false,
-						 format:'Y-m-d H:i:s',
-						 step:10,
-						 dayOfWeekStart:1,
-						 mask:true, // '9999/19/39 29:59' - digit is the maximum possible for a cell
-						}).blur();
-			    });
-		});
+        var that = this;
+        $LAB
+            .script('/third/datetimepicker/jquery.datetimepicker.2.3.8.js')
+            .wait(function(){
+                    $(that).datetimepicker(
+                        $.extend({'lang':'ch',step:5,dayOfWeekStart:1},$(that).attr())
+                        ).blur();
+                });
+        });
 
 	// 地址转地图组件
     $target.find('input.input_which_is_address').each(function(){

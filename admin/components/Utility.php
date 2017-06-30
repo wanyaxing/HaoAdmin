@@ -368,6 +368,23 @@ class Utility
         $s  = '<input name="'.$name.'" type="string" class="form-control datetimepicker" value="'.$value.'" '.' '.$strAttrs.'>';
         return $s;
     }
+    public static function strOfDay($name,$value=null,$strAttrs=' format="Y-m-d" timepicker="0"')
+    {
+        return static::strOfTime($name,$value,$strAttrs);
+    }
+    public static function strOfMonth($name,$value=null,$strAttrs=' format="Y-m" timepicker="0" ')
+    {
+        return static::strOfTime($name,$value,$strAttrs);
+    }
+    public static function strOfYear($name,$value=null,$strAttrs=' format="Y" timepicker="0" ')
+    {
+        return static::strOfTime($name,$value,$strAttrs);
+    }
+    public static function strOfHour($name,$value=null,$strAttrs=' format="H:00" datepicker="0" step=60 ')
+    {
+        return static::strOfTime($name,$value,$strAttrs);
+    }
+
     /** 根据提供的值，创建富文本样式的输入去，并填充对应的值。 */
     public static function strOfText($name,$value=null)
     {
