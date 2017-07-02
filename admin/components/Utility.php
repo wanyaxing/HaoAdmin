@@ -159,13 +159,13 @@ class Utility
 		$params = array_filter($params,function($val){
 			return $val!==null && $val!=='';
 		});
-        if (!isset($params['page_max']) || $params['page'] == 1)
-        {
-            $params['iscountall'] = 1;
-        }
         if (!isset($params['page']))
         {
             $params['page'] = 1;
+        }
+        if (!isset($params['page_max']) || $params['page'] == 1)
+        {
+            $params['iscountall'] = 1;
         }
 		if (isset($params['is_only_filter_with_request']) && $params['is_only_filter_with_request'])
 		{
