@@ -651,6 +651,21 @@ class Utility
 		}
 		return $requestResult;
     }
+
+    /** 报错并返回404信息 */
+    public static function exit404($message)
+    {
+        include AXAPI_ELO_PATH .'/404.php';
+        exit;
+    }
+
+    /** 报错并返回503信息 */
+    public static function exit503($message,$title=null)
+    {
+        include AXAPI_ELO_PATH .'/503.php';
+        exit;
+    }
+
 }
 
 //-------------------全局方法-----------------------
