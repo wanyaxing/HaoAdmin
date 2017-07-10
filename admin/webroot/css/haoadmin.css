@@ -29,6 +29,17 @@ body {
 .search_nav{
 	margin:10px 0;
 }
+
+.display_none{
+    display: none;
+}
+
+.select_none{
+    user-select:none;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+}
+
 @media (min-width: 768px) {
     .input_search_select{
     	margin-left: -7px;
