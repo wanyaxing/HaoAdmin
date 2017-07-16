@@ -472,7 +472,7 @@ class Utility
     }
 
     /** 根据提供的键值对，以及参数，创建options字符串。 */
-    public static function strOfChosen($name,$selectValues=null,$options=null,$strAttrs='')
+    public static function strOfChosen($name,$selectValues=null,$options=null,$strAttrs=' disable_search="true" ')
     {
     	if (!isset($selectValues))
     	{
