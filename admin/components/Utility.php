@@ -601,8 +601,7 @@ class Utility
         {
             if (!$bCrumb['isAuthed'])
             {
-                echo '您无权查看此页面';
-                exit;
+                throw new Exception('您无权查看此页面', 1);
             }
             $GLOBALS['breadCrumb'] = $bCrumb;
         }
