@@ -219,7 +219,7 @@ function haoPageInit(target)
             .script('/third/datetimepicker/jquery.datetimepicker.2.3.8.js')
             .wait(function(){
                     $(that).datetimepicker(
-                        $.extend({'lang':'ch',step:5,dayOfWeekStart:1},$(that).attr())
+                        $.extend({'lang':'ch',step:5,dayOfWeekStart:1,scrollInput:false,scrollMonth:false},$(that).attr())
                         ).blur();
                 });
         });
