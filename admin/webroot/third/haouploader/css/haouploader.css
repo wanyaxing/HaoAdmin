@@ -13,16 +13,20 @@
     border: 1px solid gray;
 }
 
-.dnd_which_upload_to_qiniu li *{
+.dnd_which_upload_to_qiniu li img,.dnd_which_upload_to_qiniu li .webuploader-pick,.dnd_which_upload_to_qiniu li .progress{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     margin: 0;
+    font-size: 0.6vw;
 }
 
 .pick_which_upload_to_qiniu .webuploader-element-invisible
 {
-    opacity: 0
+    opacity: 0;
+    cursor: pointer;
+    width:200%;
+    margin-left: -100%;
 }

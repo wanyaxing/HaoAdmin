@@ -53,7 +53,7 @@ var HaoUploader = {
                         .attr('multiple',inputObj.attr('multiple'))
                         ;
         inputObj.appendTo(dndObj);
-        var targetObj = $('<li class="pick_which_upload_to_qiniu">&nbsp;</li>').css({'position':'relative'}).insertAfter(inputObj);
+        var targetObj = $('<li class="pick_which_upload_to_qiniu">'+(inputObj.attr('placeholder')?inputObj.attr('placeholder'):'+')+'</li>').css({'position':'relative'}).insertAfter(inputObj);
         // console.log(dndObj[0],targetObj[0]);
 
         var uploader = WebUploader.create({
