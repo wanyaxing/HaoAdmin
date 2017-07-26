@@ -206,7 +206,6 @@ function haoPageInit(target)
 			.script('/third/haouploader/js/webuploader/webuploader.min.js')
 			.script('/third/haouploader/js/webuploader-haoplus.js')
 			.script('/third/haouploader/js/sortable/Sortable.js')
-            .script('/third/haouploader/js/lrz/lrz.bundle.js')
 			.script('/third/haouploader/js/haouploader.js')
 			.wait(function(){
 			        HaoUploader.init(that);
