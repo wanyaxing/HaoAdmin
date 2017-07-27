@@ -503,7 +503,12 @@ class Utility
 		}
 		if (count($options)==0 || !isset($options['']))
 		{
-			$options = W2Array::merge(array(''=>'...'),$options);
+            $defalutText = '...';
+            if (strpos($strAttrs,'placeholder')!==false)
+            {
+                $defalutText = preg_replace('/.*placeholder="(.*?)".*/','$1',$strAttrs);
+            }
+            $options = W2Array::merge(array(''=>$defalutText),$options);
 		}
 
         if (isset($GLOBALS['breadCrumb']['params'][$name]))
