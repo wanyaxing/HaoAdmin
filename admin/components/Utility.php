@@ -636,10 +636,11 @@ class Utility
 			}
 			else
 			{
-				print('<p>');
-				print($requestResult->errorStr);
-				print('</p>');
-				exit;
+				// print('<p>');
+				// print($requestResult->errorStr);
+				// print('</p>');
+				// exit;
+               throw new Exception($requestResult->errorStr, 1);
 			}
 		}
 
