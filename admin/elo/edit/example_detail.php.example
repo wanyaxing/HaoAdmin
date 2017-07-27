@@ -85,8 +85,8 @@
  */
 ?>
 <form class="form-horizontal clearfix" action="/ajax_haoconnect.php" method="post">
-    <input name="url_param" type="hidden" class="form-control" placeholder="ID" value="<?= $urlParam; ?>">
-    <input name="id" type="hidden" class="form-control" placeholder="ID" value="<?= $requestResult->find('id'); ?>">
+    <input name="url_param" type="hidden" class="form-control" value="<?= $urlParam; ?>">
+    <input name="id" type="hidden" class="form-control" value="<?= $requestResult->find('id'); ?>">
 
     <div class="form-group">
         <label class="col-xs-2">名称</label>
