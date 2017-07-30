@@ -291,6 +291,13 @@ function haoPageInit(target)
     	}
     });
 
+    //导航栏里的raid切换按钮立即生效
+    $target.find('.search_nav form input[type=radio]').change(function(){
+        if ($(this).is(':checked'))
+        {
+            $(this).closest('form').submit();
+        }
+    });
 }
 
 /*注销相关事件*/
