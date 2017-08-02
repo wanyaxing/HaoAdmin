@@ -108,7 +108,7 @@ define("AX_TIMER_START", microtime (true));//记录请求开始时间
     $currentUserResult = Utility::getCurrentUserResult();
 
     //路径中的/other/可以自动补上。
-    if (!file_exists(AXAPI_ELO_PATH. $requestPath.'.php') && file_exists('/other/'.$requestPath))
+    if (!file_exists(AXAPI_ELO_PATH. $requestPath.'.php') && file_exists(AXAPI_ELO_PATH.'/other/'.$requestPath.'.php'))
     {
         $requestPath = '/other/'.$requestPath;
     }
