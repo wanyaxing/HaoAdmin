@@ -51,6 +51,7 @@
     // $PAGE_DESCRIPTION = '';
     // $PAGE_ICON = '';
 
+    /** @var $detailResult ExampleResult */
 ?>
 <!-- 面包屑导航 -->
 <?= Utility::strOfBreadCrumb($breadCrumb) ?>
@@ -60,7 +61,7 @@
     <form class="" action="?" data-pjax="true">
         <div class="form-group">
             <?= Utility::strOfRadio('status',array(0=>'回收站',1=>'正常',2=>'草稿箱',3=>'待审'),W2HttpRequest::getRequestString('status',false,1))?>
-            <?= Utility::strOfChosenWithAjax('user_id','/ajax_haoconnect.php?url_param=user/list&keyword=','.*?\d>id','.*?\d>username',W2HttpRequest::getRequestString('user_id'),null,null,false,'指定用户') ?>
+            <?= Utility::strOfChosenWithAjax('user_id','/ajax_haoconnect.php?url_param=user/list&keyword=','.*?\d>id','.*?\d>username',W2HttpRequest::getRequestString('user_id'),null,'placeholder="指定用户"') ?>
             <input name="keyword" type="text" class="form-control" placeholder="搜索" value=<?= W2HttpRequest::getRequestString('keyword') ?>>
             <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span>应用</button>
         </div>
