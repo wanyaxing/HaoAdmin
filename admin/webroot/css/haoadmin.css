@@ -3,6 +3,7 @@ body{
 }
 
 body {
+    word-break: break-all;
     /*padding-top: 70px;*/
 }
 #home_navcontainer{
