@@ -7,7 +7,10 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=414,user-scalable=0, target-densitydpi=device-dpi">
-<title><?= $title ?></title>
+<title><?= $PAGE_TITLE ?></title>
+<meta name="keywords" content="<?= $PAGE_KEYWORDS ?>" />
+<meta name="description" content="<?= $PAGE_DESCRIPTION ?>" />
+<link rel="apple-touch-icon" href="<?= $PAGE_ICON ?>" />
 <link rel="stylesheet" type="text/css" href="/third/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="/third/chosen/chosen.css">
 <link rel="stylesheet" type="text/css" href="/third/haouploader/css/haouploader.css">
