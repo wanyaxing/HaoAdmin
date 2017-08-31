@@ -539,7 +539,7 @@ $(function(){
 									$('#side_content .list-group-item-warning').removeClass('list-group-item-warning');
 									var requestUrl = options.requestUrl?options.requestUrl:options.url;
 									requestUrl = requestUrl.replace(/^http:\/\/.*?(\/.*?)(\/*[\?#].*$|[\?#].*$|\/*$|\.\.+)/g,'$1');
-                                    if (_hmt){_hmt.push(['_trackPageview', requestUrl]);}
+                                    if (typeof(_hmt)!='undefined'){_hmt.push(['_trackPageview', requestUrl]);}
                                     var sideAObj = $('#side_content [href^="'+requestUrl+'"]');
 									if (sideAObj.closest('.list-group').css('display')=='none')
 									{
