@@ -23,6 +23,7 @@ HaoAdmin = {
             ,columnClass: 'col-md-8 col-md-offset-2'
             },options);
         options['content'] = 'url:'+jcKey;
+        if (_hmt){_hmt.push(['_trackPageview', jcKey]);}
 
         options['contentLoaded'] = function(){
             var that = this;
