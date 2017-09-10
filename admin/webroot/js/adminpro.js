@@ -196,7 +196,14 @@ function haoPageInit(target)
 							'chosen:ready':chosen_ready
 							,'chosen:winnow_results':chosen_winnow_results
 							})
-                        .chosen( $.extend({},$(that).attr(),{allow_single_deselect: true,search_contains:true}) );
+                        .chosen( $.extend({}
+                                           ,$(that).attr()
+                                           ,{allow_single_deselect: true
+                                            ,search_contains:true
+                                            ,placeholder_text_single:'关键字'
+                                            ,placeholder_text_multiple:'关键字'
+                                            ,no_results_text:'无结果'
+                                        }) );
 				});
 		})
 	// 七牛上传
