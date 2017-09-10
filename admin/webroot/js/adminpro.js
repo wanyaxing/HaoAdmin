@@ -225,8 +225,9 @@ function haoPageInit(target)
         $LAB
             .script('/third/datetimepicker/jquery.datetimepicker.2.3.8.js')
             .wait(function(){
+                    $.datetimepicker.setLocale('zh');
                     $(that).datetimepicker(
-                        $.extend({'lang':'ch',step:5,dayOfWeekStart:1,scrollInput:false,scrollMonth:false},$(that).attr())
+                        $.extend({step:5,dayOfWeekStart:1,scrollInput:false,scrollMonth:false},$(that).attr())
                         ).blur();
                 });
         });
