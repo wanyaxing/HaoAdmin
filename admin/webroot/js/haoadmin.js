@@ -219,23 +219,43 @@ HaoAdmin = {
         {
             _id = $(_this).find('td').eq(0).html();
         }
-        var pathname = window.location.pathname;
-        $.get(pathname+'?is_only_filter_with_request=1&page_max=1&count_total=1&status=1,2,3,0&id='+_id,function(result){
-            $(_this).trigger('haoadmin_detail_beforeReplace');
-            var trNode = $(result).find('tbody tr').addClass('success');
-            haoPageInit(trNode);
-            if (_this && $(_this).closest('tr').length>0)
+        if (!_id || _id=='')
+        {
+            $(_this).closest('tr,.tr_li').remove();
+        }
+        var $tbody = $(_this).closest('tbody,.tbody_div');
+        if (_id)
+        {
+            if ($tbody.length==0 && $(_this).siblings('.table-responsive').length>0)
             {
-                $(_this).closest('tr').replaceWith(trNode);
+                $tbody = $(_this).siblings('.table-responsive').find('tbody,.tbody_div');
             }
-            else
+            if ($tbody.length>0)
             {
-                $('#main_content tbody').prepend(trNode);
+                var pathname = $tbody.closest('[action]').attr('action');
+                if (!pathname)
+                {
+                    pathname = window.location.pathname;
+                }
+                pathname += (pathname.indexOf('?')>0?'&':'?') +'is_only_filter_with_request=1&page_max=1&count_total=1&status=1,2,3,0&id='+_id
+                $.get(pathname,function(result){
+                    $(_this).trigger('haoadmin_detail_beforeReplace');
+                    var trNode = $(result).find('tbody tr,.tr_li').addClass('success');
+                    haoPageInit(trNode);
+                    if (_this && $(_this).closest('tr,.tr_li').length>0)
+                    {
+                        $(_this).closest('tr,.tr_li').replaceWith(trNode);
+                    }
+                    else
+                    {
+                        $tbody.prepend(trNode);
 
-                $('#main_content tbody .haoadmin_noresults').remove();
+                        $tbody.find('.haoadmin_noresults').remove();
 
+                    }
+                });
             }
-        });
+        }
     }
     ,detail:function(_this,jcKey)
     {
@@ -252,8 +272,9 @@ HaoAdmin = {
                         ,animation: 'scale'
                         };
         options['afterSubmitSuccess'] = function(result){
-            $(_this).trigger('haoadmin_detail_beforeUpdate');
+            $(_this).triggerHandler('haoadmin_detail_beforeUpdate',[result,_this]);
             HaoAdmin.update(_this,typeof(result['results'])=='object'?result['results']['id']:null);
+            $(this.$b).find('form').eq(0).triggerHandler('haoadmin_detail_beforeUpdate',[result,_this]);
         }
         HaoAdmin.show(jcKey,options);
         return false;
