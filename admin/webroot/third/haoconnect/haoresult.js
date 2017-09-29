@@ -65,7 +65,7 @@ HaoResult = (function()
             }
             else if (keyItem!='')
             {
-                if (changeValue && changeValue[keyItem])
+                if (changeValue && changeValue[keyItem]!=undefined)
                 {
                     changeValue = changeValue[keyItem];
                     continue;
