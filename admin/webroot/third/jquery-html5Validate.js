@@ -183,12 +183,12 @@
 				} else {
 					// 数值大小限制
 					value = Number(value);
-					attrStep = Number($(ele).attr("step")) || 1;
+					attrStep = Number($(ele).attr("step")) || 0;
 					if (attrMin && value < attrMin) {
 						$(ele).testRemind("值必须大于或等于" + attrMin);
 					} else if (attrMax && value > attrMax) {
 						$(ele).testRemind("值必须小于或等于" + attrMax);
-					} else if (attrStep && !/^\d+(\.0+)?$/.test((Math.abs((value - attrMin || 0)) / attrStep).toFixed(10))) {
+					} else if (attrStep && attrStep==parseInt(attrStep) && attrMin==parseInt(attrMin) && !/^\d+(\.0+)?$/.test((Math.abs((value - attrMin || 0)) / attrStep).toFixed(10))) {
 						$(ele).testRemind("值无效");
 					} else {
 						return false;
