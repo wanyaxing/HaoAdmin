@@ -215,16 +215,17 @@ HaoAdmin = {
     }
     ,update:function(_this,_id)
     {
+        var _thisTr = $(_this).closest('tr,.tr_li');
         if (!_id && _this)
         {
             _id = $(_this).find('td').eq(0).html();
         }
         if (!_id || _id=='')
         {
-            $(_this).closest('tr,.tr_li').remove();
+            _thisTr.remove();
         }
         var $tbody = $(_this).closest('tbody,.tbody_div');
-        if (_id)
+        if (_id && ( !_thisTr.attr('item_id') || _thisTr.attr('item_id') == _id) )
         {
             if ($tbody.length==0 && $(_this).siblings('.table-responsive').length>0)
             {
@@ -242,9 +243,9 @@ HaoAdmin = {
                     $(_this).trigger('haoadmin_detail_beforeReplace');
                     var trNode = $(result).find('tbody tr,.tr_li').addClass('success');
                     haoPageInit(trNode);
-                    if (_this && $(_this).closest('tr,.tr_li').length>0)
+                    if (_this && _thisTr.length>0)
                     {
-                        $(_this).closest('tr,.tr_li').replaceWith(trNode);
+                        _thisTr.replaceWith(trNode);
                     }
                     else
                     {
