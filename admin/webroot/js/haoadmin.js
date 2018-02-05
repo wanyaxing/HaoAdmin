@@ -47,15 +47,27 @@ HaoAdmin = {
                 {
                     if (!options['onSubmit'] || options['onSubmit'].apply(that,arguments)!=false)
                     {
-                        var params = $(this).find('form').serializeArray();
-                        console.log('debug submit',params);
-                        /* Because serializeArray() ignores unset checkboxes and radio buttons: */
-                        params = params.concat(
-                                    $(this).find('form').find('input[type=checkbox]:not(:checked)').map(
-                                        function() {
-                                            return {"name": this.name, "value": 0}
-                                        }).get()
-                                    );
+                        var params,contentType,processData;
+                        if ($(this).find('[type=file]').length>0)
+                        {
+                            params  = new FormData($(this).find('form')[0]);
+                            contentType =  false
+                            processData =  false
+                        }
+                        else
+                        {
+                            params = $(this).find('form').serializeArray();
+                            console.log('debug submit',params);
+                            /* Because serializeArray() ignores unset checkboxes and radio buttons: */
+                            params = params.concat(
+                                        $(this).find('form').find('input[type=checkbox]:not(:checked)').map(
+                                            function() {
+                                                return {"name": this.name, "value": 0}
+                                            }).get()
+                                        );
+                            contentType = 'application/x-www-form-urlencoded; charset=UTF-8' ;
+                            processData = true ;
+                        }
                         var ajaxUrl = $(this).find('form').attr('action');
                         if (ajaxUrl==='')
                         {
@@ -81,6 +93,8 @@ HaoAdmin = {
                            data: params,
                            dataType: 'text',
                            async:true,//是否使用异步
+                           contentType: contentType,
+                           processData: processData,
                            success: function(responseText){
                                 try
                                 {
