@@ -27,32 +27,33 @@ HaoResult = (function()
 	}
 
     /** 根据路径取数据，默认是results中取，也可以指定extraInfo>路径下取数据。 */
-	HaoResult.prototype.find = function(path,defaultValue)
-	{
-        path = $.trim(path);
+    HaoResult.prototype.findValue = function(path,defaultValue)
+    {
+        // console.log('debug find:',path,this);
+        path = path.trim();
         if (this.pathCache[path])
         {
             return this.pathCache[path];
         }
         if (!path)
         {
-        	console.log('warning: unvalid path.');
-        	return null;
+            console.log('warning: unvalid path.');
+            return null;
         }
 
         if ( path.indexOf('results>') !== 0 && path.indexOf('extraInfo>') !== 0 )
         {
-            path = 'results>' + path;
+                path = 'results>' + path;
         }
 
-        paths = path.split('>');
+        let paths = path.split('>');
 
         var changeValue = null;
 
         for (var index in paths)
         {
-        	var keyItem = paths[index];
-        	if (index==0)
+            var keyItem = paths[index];
+            if (index==0)
             {
                 if (keyItem=='extraInfo')
                 {
@@ -65,19 +66,24 @@ HaoResult = (function()
             }
             else if (keyItem!='')
             {
-                if (changeValue && changeValue[keyItem]!=undefined)
+                if (changeValue && typeof changeValue[keyItem]!='undefined')
                 {
                     changeValue = changeValue[keyItem];
                     continue;
                 }
-                changeValue = defaultValue;
+                changeValue = null;
                 break;
             }
         }
 
-        value = this.value(changeValue);
-        this.pathCache[path] = value;
-        return value;
+        this.pathCache[path] = changeValue;
+
+        if (defaultValue && (changeValue==null || changeValue=='') )
+        {
+            changeValue = defaultValue;
+        }
+        return changeValue;
+
     }
 
     /** 传入值如果是model，则以当前Result为框架构建新Result，否则直接返回。 */
