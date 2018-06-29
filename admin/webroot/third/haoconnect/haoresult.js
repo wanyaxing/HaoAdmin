@@ -27,7 +27,7 @@ HaoResult = (function()
 	}
 
     /** 根据路径取数据，默认是results中取，也可以指定extraInfo>路径下取数据。 */
-    HaoResult.prototype.findValue = function(path,defaultValue)
+    HaoResult.prototype.find = function(path,defaultValue)
     {
         // console.log('debug find:',path,this);
         path = path.trim();
